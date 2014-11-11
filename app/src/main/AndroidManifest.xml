@@ -27,10 +27,21 @@
 
         <service
             android:name="com.shivandev.btmonoforaudio.ScoProcessingSrv"
-            android:label="ScoProcessingSrv"
+            android:enabled="true"
+            android:exported="true"
+            android:label="ScoProcessingSrv" >
+        </service>
+        <service
+            android:name="com.shivandev.btmonoforaudio.BtListenerSrv"
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <receiver
+            android:name=".BtListenerBCastRec"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
     </application>
 
 </manifest>

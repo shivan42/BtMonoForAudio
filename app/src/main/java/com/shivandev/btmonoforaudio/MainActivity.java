@@ -1,6 +1,7 @@
 package com.shivandev.btmonoforaudio;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         findViewById(R.id.onBtn).setOnClickListener(this);
         findViewById(R.id.offBtn).setOnClickListener(this);
+        findViewById(R.id.onServiceBtn).setOnClickListener(this);
+        findViewById(R.id.offServiceBtn).setOnClickListener(this);
     }
 
 
@@ -49,6 +52,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.offBtn:
 //                stopService(ScoProcessingSrv.createStopScoIntent(getApplicationContext()));
                 startService(ScoProcessingSrv.createStopScoIntent(getApplicationContext()));
+                break;
+            case R.id.onServiceBtn:
+                startService(new Intent(getApplicationContext(), BtListenerSrv.class));
+                break;
+            case R.id.offServiceBtn:
+                stopService(new Intent(getApplicationContext(), BtListenerSrv.class));
                 break;
         }
     }

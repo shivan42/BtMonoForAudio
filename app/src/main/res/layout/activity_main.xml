@@ -22,4 +22,22 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Запустить сервис"
+        android:id="@+id/onServiceBtn"
+        android:layout_below="@+id/onBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Остановить сервис"
+        android:id="@+id/offServiceBtn"
+        android:layout_below="@+id/offBtn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

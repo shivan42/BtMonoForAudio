@@ -107,6 +107,7 @@ public class ScoProcessingSrv extends Service {
         */
     }
 
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -131,7 +132,6 @@ public class ScoProcessingSrv extends Service {
                     @Override
                     public void run() {
                         startSco();
-
                     }
                 }, 2000);
             }
