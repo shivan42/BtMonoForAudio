@@ -22,6 +22,7 @@ public class ScoProcessingSrv extends Service {
     private BroadcastReceiver phoneCallListenerRec = null;
     private Handler handler;
     private boolean isScoOn;
+    private boolean restartAfterCall;
 
     public static enum Mode {
         START_SCO,
@@ -52,6 +53,8 @@ public class ScoProcessingSrv extends Service {
 
     @Override
     public void onDestroy() {
+        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.pause"));
+        log("togglepause");
         stopSCO();
         if (phoneCallListenerRec != null) {
             unregisterReceiver(phoneCallListenerRec);
@@ -131,9 +134,10 @@ public class ScoProcessingSrv extends Service {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        restartAfterCall = true;
                         startSco();
                     }
-                }, 2000);
+                }, 1500);
             }
 //            int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
 //            switch (state) {
@@ -176,7 +180,17 @@ public class ScoProcessingSrv extends Service {
                     localMBTApplication.showToast(getApplicationContext(), l(2131230734));
                     */
                     //                playStartSound();
-                    //                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!restartAfterCall) {
+                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+//                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
+                                log("togglepause");
+                            }
+                            restartAfterCall = false;
+                        }
+                    }, 1000);
                     //                    setupScoWatcher();
                     //                mAudioManager.setStreamVolume(3, mAudioManager.getStreamMaxVolume(3), 0);
                     break;
@@ -191,4 +205,26 @@ public class ScoProcessingSrv extends Service {
             }
         }
     }
+
+//    void playStartSound()
+//    {
+//        if (!MBTPreferences.playsound) {
+//            return;
+//        }
+//        if (this.mute_sound)
+//        {
+//            this.mute_sound = false;
+//            return;
+//        }
+//        try
+//        {
+//            MediaPlayer.create(this, 2131034113).start();
+//            return;
+//        }
+//        catch (Exception localException)
+//        {
+//            localException.printStackTrace();
+//        }
+//    }
+
 }

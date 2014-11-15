@@ -3,6 +3,7 @@ package com.shivandev.btmonoforaudio;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         findViewById(R.id.offBtn).setOnClickListener(this);
         findViewById(R.id.onServiceBtn).setOnClickListener(this);
         findViewById(R.id.offServiceBtn).setOnClickListener(this);
+        findViewById(R.id.command).setOnClickListener(this);
     }
 
 
@@ -54,10 +56,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 startService(ScoProcessingSrv.createStopScoIntent(getApplicationContext()));
                 break;
             case R.id.onServiceBtn:
+//                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.pause"));
                 startService(new Intent(getApplicationContext(), BtListenerSrv.class));
                 break;
             case R.id.offServiceBtn:
                 stopService(new Intent(getApplicationContext(), BtListenerSrv.class));
+                break;
+            case R.id.command:
+//                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+                    }
+                }, 1000);
                 break;
         }
     }

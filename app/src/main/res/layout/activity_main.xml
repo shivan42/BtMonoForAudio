@@ -40,4 +40,13 @@
         android:layout_below="@+id/offBtn"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Выполнить"
+        android:id="@+id/command"
+        android:layout_below="@+id/onServiceBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
