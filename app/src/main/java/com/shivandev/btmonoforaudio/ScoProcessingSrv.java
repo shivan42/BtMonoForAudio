@@ -11,16 +11,21 @@ import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public class ScoProcessingSrv extends Service {
+import com.google.inject.Inject;
 
-    private static final boolean isDebugThisModule = true;
+import roboguice.service.RoboService;
+
+public class ScoProcessingSrv extends RoboService {
+
+    private static final boolean IS_DEBUG_THIS_MODULE = true;
     public static final String EXTRA_MODE = "EXTRA_MODE";
-    private int oldMediaVolume = -1;
-    private int oldBtVolume = -1;
-    private AudioManager mAudioManager;
+
+    @Inject private AudioManager mAudioManager;
+    @Inject private Handler handler;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
     private BroadcastReceiver phoneCallListenerRec = null;
-    private Handler handler;
+    private int oldMediaVolume = -1;
+    private int oldBtVolume = -1;
     private boolean isScoOn;
     private boolean restartAfterCall;
 
@@ -43,9 +48,11 @@ public class ScoProcessingSrv extends Service {
 
     @Override
     public void onCreate() {
-        handler = new Handler();
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        super.onCreate();
+//        handler = new Handler();
+//        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mScoStateUpdatedBCastRec = new ScoStateUpdatedBCastRec();
+
 //        phoneCallListenerRec = new BluetoothStateBCastRec();
 //        registerReceiver(phoneCallListenerRec, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 
@@ -61,7 +68,8 @@ public class ScoProcessingSrv extends Service {
 //            phoneCallListenerRec = null;
         }
 //        stopForeground(true);
-        }
+        super.onDestroy();
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -78,6 +86,7 @@ public class ScoProcessingSrv extends Service {
                     break;
             }
         }
+        super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
     }
 
@@ -91,7 +100,6 @@ public class ScoProcessingSrv extends Service {
 
     private void stopSCO() {
         /*
-        removeScoWatcher();
         stopForeground(true);
         mAudioManager.setStreamVolume(3, this.old_media_volume, 0);
         mAudioManager.setStreamVolume(6, this.old_bt_volume, 0);
@@ -117,13 +125,13 @@ public class ScoProcessingSrv extends Service {
     }
 
     void log(String str) {
-        if (isDebugThisModule) Log.e("SCO Service", str);
+        if (IS_DEBUG_THIS_MODULE) Log.e("SCO Service", str);
     }
 
     /**
-     * отслеживаем состояние блютуса, и реагируем на выключение прекращением работы сервиса и SCO
+     * отслеживаем состояние телефона, реагируем на выходящие/исходящие звонки - прекращением работу сервиса и возобновляем после звонка
      */
-    class BluetoothStateBCastRec extends BroadcastReceiver {
+    class PhoneStateBCastRec extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String str = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
@@ -139,12 +147,6 @@ public class ScoProcessingSrv extends Service {
                     }
                 }, 1500);
             }
-//            int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-//            switch (state) {
-//                case BluetoothAdapter.STATE_OFF:
-//                    stopSCO();
-//                    break;
-//            }
         }
     }
 
@@ -169,7 +171,7 @@ public class ScoProcessingSrv extends Service {
                     mAudioManager.setMode(AudioManager.MODE_IN_CALL);
                     mAudioManager.setBluetoothScoOn(true);
                     if (phoneCallListenerRec == null) {
-                        phoneCallListenerRec = new BluetoothStateBCastRec();
+                        phoneCallListenerRec = new PhoneStateBCastRec();
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
 
@@ -191,12 +193,10 @@ public class ScoProcessingSrv extends Service {
                             restartAfterCall = false;
                         }
                     }, 1000);
-                    //                    setupScoWatcher();
                     //                mAudioManager.setStreamVolume(3, mAudioManager.getStreamMaxVolume(3), 0);
                     break;
                 case AudioManager.SCO_AUDIO_STATE_DISCONNECTED:
                     log("SCO_AUDIO_STATE_DISCONNECTED");
-//                    stopSCO();
                     stopSelf();
                     break;
                 case AudioManager.SCO_AUDIO_STATE_ERROR:

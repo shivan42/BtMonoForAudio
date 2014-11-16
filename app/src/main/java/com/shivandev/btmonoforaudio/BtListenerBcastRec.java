@@ -8,10 +8,10 @@ import android.os.Handler;
 import android.util.Log;
 
 public class BtListenerBCastRec extends BroadcastReceiver {
-    private boolean isDebugThisModule = true;
+    private static final boolean IS_DEBUG_THIS_MODULE = true;
 
     void log(String str) {
-        if (isDebugThisModule) Log.e("SCO Service", str);
+        if (IS_DEBUG_THIS_MODULE) Log.e("SCO Service", str);
     }
 
     @Override

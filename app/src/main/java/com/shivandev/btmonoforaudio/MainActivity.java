@@ -1,24 +1,34 @@
 package com.shivandev.btmonoforaudio;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+
+import roboguice.activity.RoboActivity;
+import roboguice.inject.*;
 
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends RoboActivity implements View.OnClickListener {
+
+    @InjectView(R.id.onBtn) private Button onBtn;
+    @InjectView(R.id.offBtn) private Button offBtn;
+    @InjectView(R.id.startServiceBtn) private Button startServiceBtn;
+    @InjectView(R.id.stopServiceBtn) private Button stopServiceBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.onBtn).setOnClickListener(this);
-        findViewById(R.id.offBtn).setOnClickListener(this);
-        findViewById(R.id.onServiceBtn).setOnClickListener(this);
-        findViewById(R.id.offServiceBtn).setOnClickListener(this);
+
+        onBtn.setOnClickListener(this);
+        offBtn.setOnClickListener(this);
+        startServiceBtn.setOnClickListener(this);
+        stopServiceBtn.setOnClickListener(this);
+
         findViewById(R.id.command).setOnClickListener(this);
     }
 
@@ -52,18 +62,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 startService(ScoProcessingSrv.createStartScoIntent(getApplicationContext()));
                 break;
             case R.id.offBtn:
-//                stopService(ScoProcessingSrv.createStopScoIntent(getApplicationContext()));
                 startService(ScoProcessingSrv.createStopScoIntent(getApplicationContext()));
                 break;
-            case R.id.onServiceBtn:
-//                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.pause"));
+            case R.id.startServiceBtn:
                 startService(new Intent(getApplicationContext(), BtListenerSrv.class));
                 break;
-            case R.id.offServiceBtn:
+            case R.id.stopServiceBtn:
                 stopService(new Intent(getApplicationContext(), BtListenerSrv.class));
                 break;
             case R.id.command:
-//                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
