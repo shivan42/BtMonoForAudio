@@ -24,10 +24,10 @@ public class ScoProcessingSrv extends RoboService {
     @Inject private Handler handler;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
     private BroadcastReceiver phoneCallListenerRec = null;
-    private int oldMediaVolume = -1;
-    private int oldBtVolume = -1;
     private boolean isScoOn;
     private boolean restartAfterCall;
+//    private int oldMediaVolume = -1;
+//    private int oldBtVolume = -1;
 
     public static enum Mode {
         START_SCO,
