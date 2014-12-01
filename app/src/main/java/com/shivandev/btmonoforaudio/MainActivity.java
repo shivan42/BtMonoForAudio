@@ -1,6 +1,7 @@
 package com.shivandev.btmonoforaudio;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -21,9 +22,10 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
     @InjectView(R.id.am_btn_startBtAdapterListener) private Button startServiceBtn;
     @InjectView(R.id.am_btn_stopBtAdapterListener) private Button stopServiceBtn;
 
-    @Inject
-    private Controller controller;
+    @Inject private Controller controller;
+    @Inject private AudioManager mAudioManager;
     private boolean isBtAdapterListenerServiceRun;
+    private boolean isScoServiceRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +39,21 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
 
         findViewById(R.id.command).setOnClickListener(this);
 
-//        controller = new Controller(getApplicationContext());
-
-        refreshInterface();
+        refreshInterfaceBtAdapterButtons();
+        refreshInterfaceScoButtons();
     }
 
-    private void refreshInterface() {
+    private void refreshInterfaceBtAdapterButtons() {
         isBtAdapterListenerServiceRun = controller.isServiceRunning(BtListenerSrv.class.getName());
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
         stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }
 
+    private void refreshInterfaceScoButtons() {
+        isScoServiceRun = mAudioManager.isBluetoothScoOn();
+        onBtn.setEnabled(!isScoServiceRun);
+        offBtn.setEnabled(isScoServiceRun);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,15 +82,19 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
                 controller.startSco();
+                refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_stopSco:
                 controller.stopSco();
+                refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_startBtAdapterListener:
                 controller.startBtAdapterListener();
+                refreshInterfaceBtAdapterButtons();
                 break;
             case R.id.am_btn_stopBtAdapterListener:
                 controller.stopBtAdapterListener();
+                refreshInterfaceBtAdapterButtons();
                 break;
             case R.id.command:
                 new Handler().postDelayed(new Runnable() {
@@ -95,6 +105,5 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
                 }, 1000);
                 break;
         }
-        refreshInterface();
     }
 }

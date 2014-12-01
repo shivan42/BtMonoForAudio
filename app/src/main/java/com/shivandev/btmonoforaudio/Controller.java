@@ -11,11 +11,6 @@ import java.util.List;
 public class Controller {
     @Inject Context context;
 
-//    public Controller(Context context) {
-//        this.context = context;
-//    }
-
-
     public void stopBtAdapterListener() {
         context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
@@ -43,5 +38,4 @@ public class Controller {
         }
         return false;
     }
-
 }
