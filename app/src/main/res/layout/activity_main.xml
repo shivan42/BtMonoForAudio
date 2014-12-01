@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Включить"
-        android:id="@+id/onBtn"
+        android:id="@+id/am_btn_startSco"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
        />
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Выключить"
-        android:id="@+id/offBtn"
+        android:id="@+id/am_btn_stopSco"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
        />
@@ -27,8 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Запустить сервис"
-        android:id="@+id/startServiceBtn"
-        android:layout_below="@+id/onBtn"
+        android:id="@+id/am_btn_startBtAdapterListener"
+        android:layout_below="@+id/am_btn_startSco"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -36,8 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Остановить сервис"
-        android:id="@+id/stopServiceBtn"
-        android:layout_below="@+id/offBtn"
+        android:id="@+id/am_btn_stopBtAdapterListener"
+        android:layout_below="@+id/am_btn_stopSco"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
     <Button
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:text="Выполнить"
         android:id="@+id/command"
-        android:layout_below="@+id/startServiceBtn"
+        android:layout_below="@+id/am_btn_startBtAdapterListener"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

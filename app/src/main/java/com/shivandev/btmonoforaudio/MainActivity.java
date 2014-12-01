@@ -8,16 +8,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.inject.Inject;
+
 import roboguice.activity.RoboActivity;
-import roboguice.inject.*;
+import roboguice.inject.InjectView;
 
 
 public class MainActivity extends RoboActivity implements View.OnClickListener {
 
-    @InjectView(R.id.onBtn) private Button onBtn;
-    @InjectView(R.id.offBtn) private Button offBtn;
-    @InjectView(R.id.startServiceBtn) private Button startServiceBtn;
-    @InjectView(R.id.stopServiceBtn) private Button stopServiceBtn;
+    @InjectView(R.id.am_btn_startSco) private Button onBtn;
+    @InjectView(R.id.am_btn_stopSco) private Button offBtn;
+    @InjectView(R.id.am_btn_startBtAdapterListener) private Button startServiceBtn;
+    @InjectView(R.id.am_btn_stopBtAdapterListener) private Button stopServiceBtn;
+
+    @Inject
+    private Controller controller;
+    private boolean isBtAdapterListenerServiceRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,16 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
         stopServiceBtn.setOnClickListener(this);
 
         findViewById(R.id.command).setOnClickListener(this);
+
+//        controller = new Controller(getApplicationContext());
+
+        refreshInterface();
+    }
+
+    private void refreshInterface() {
+        isBtAdapterListenerServiceRun = controller.isServiceRunning(BtListenerSrv.class.getName());
+        startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
+        stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }
 
 
@@ -58,17 +74,17 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.onBtn:
-                startService(ScoProcessingSrv.createStartScoIntent(getApplicationContext()));
+            case R.id.am_btn_startSco:
+                controller.startSco();
                 break;
-            case R.id.offBtn:
-                startService(ScoProcessingSrv.createStopScoIntent(getApplicationContext()));
+            case R.id.am_btn_stopSco:
+                controller.stopSco();
                 break;
-            case R.id.startServiceBtn:
-                startService(new Intent(getApplicationContext(), BtListenerSrv.class));
+            case R.id.am_btn_startBtAdapterListener:
+                controller.startBtAdapterListener();
                 break;
-            case R.id.stopServiceBtn:
-                stopService(new Intent(getApplicationContext(), BtListenerSrv.class));
+            case R.id.am_btn_stopBtAdapterListener:
+                controller.stopBtAdapterListener();
                 break;
             case R.id.command:
                 new Handler().postDelayed(new Runnable() {
@@ -79,5 +95,6 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
                 }, 1000);
                 break;
         }
+        refreshInterface();
     }
 }
