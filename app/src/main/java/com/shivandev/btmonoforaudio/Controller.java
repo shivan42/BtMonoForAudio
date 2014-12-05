@@ -1,22 +1,21 @@
 package com.shivandev.btmonoforaudio;
 
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 
 import com.google.inject.Inject;
 
-import java.util.List;
-
 public class Controller {
     @Inject Context context;
+	@Inject private BtListenerBCastRec mBtListenerBCastRec;
 
-    public void stopBtAdapterListener() {
-        context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
+	public void stopBtAdapterListener() {
+		mBtListenerBCastRec.unregister();
+//        context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
     public void startBtAdapterListener() {
-        context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
+		mBtListenerBCastRec.register();
+//        context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
     public void stopSco() {
@@ -27,15 +26,18 @@ public class Controller {
         context.startService(ScoProcessingSrv.createStartScoIntent(context.getApplicationContext()));
     }
 
-    public boolean isServiceRunning(String serviceClassName){
-        ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
-
-        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-            if (runningServiceInfo.service.getClassName().equals(serviceClassName)){
-                return true;
-            }
-        }
-        return false;
+    public boolean isBtListenerRunning(){
+        return Prefs.IS_BT_LISTENER_RUN.getBool();
     }
+//    public boolean isBtListenerRunning(String serviceClassName){
+//        ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+//        List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+//
+//        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
+//            if (runningServiceInfo.service.getClassName().equals(serviceClassName)){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

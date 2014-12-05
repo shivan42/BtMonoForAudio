@@ -44,7 +44,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
     }
 
     private void refreshInterfaceBtAdapterButtons() {
-        isBtAdapterListenerServiceRun = controller.isServiceRunning(BtListenerSrv.class.getName());
+        isBtAdapterListenerServiceRun = controller.isBtListenerRunning();
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
         stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }

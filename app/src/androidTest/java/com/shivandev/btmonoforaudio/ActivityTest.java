@@ -26,7 +26,7 @@ public class ActivityTest {
     @Before
     public  void setUp() {
         RoboGuice.overrideApplicationInjector(Robolectric.application, new MyTestModule());
-        when(controllerMock.isServiceRunning(BtListenerSrv.class.getName())).thenReturn(false);
+        when(controllerMock.isBtListenerRunning()).thenReturn(false);
         when(mAudioManagerMock.isBluetoothScoOn()).thenReturn(false);
         mainActivity = Robolectric.buildActivity(MainActivity.class).create().start().resume().get();
     }
@@ -55,13 +55,13 @@ public class ActivityTest {
         assertThat(btnStartSrv).isEnabled();
         assertThat(btnStopSrv).isDisabled();
         // перед вызовом клика кнопки, подключаем мок с нужным ответом
-        when(controllerMock.isServiceRunning(BtListenerSrv.class.getName())).thenReturn(true);
+        when(controllerMock.isBtListenerRunning()).thenReturn(true);
         btnStartSrv.performClick();
         // далее повторяем цикл для разных кнопок
         assertThat(btnStartSrv).isDisabled();
         assertThat(btnStopSrv).isEnabled();
 
-        when(controllerMock.isServiceRunning(BtListenerSrv.class.getName())).thenReturn(false);
+        when(controllerMock.isBtListenerRunning()).thenReturn(false);
         btnStopSrv.performClick();
 
         assertThat(btnStartSrv).isEnabled();

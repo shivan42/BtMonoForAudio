@@ -23,8 +23,6 @@ public class BtListenerSrv extends RoboService {
         registerReceiver(mBtListenerBCastRec, filter);
     }
 
-
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId); //Service.START_STICKY;
