@@ -12,8 +12,10 @@ import org.robolectric.Robolectric;
 
 import roboguice.RoboGuice;
 
-import static org.fest.assertions.api.ANDROID.assertThat;
+//import static org.fest.assertions.api.ANDROID.assertThat;
+import static org.assertj.android.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -56,13 +58,17 @@ public class ActivityTest {
         assertThat(btnStopSrv).isDisabled();
         // перед вызовом клика кнопки, подключаем мок с нужным ответом
         when(controllerMock.isBtListenerRunning()).thenReturn(true);
+        // вызываем клик
         btnStartSrv.performClick();
+        // проверяем был ли вызван определенный метод
+        verify(controllerMock).startBtAdapterListener();
         // далее повторяем цикл для разных кнопок
         assertThat(btnStartSrv).isDisabled();
         assertThat(btnStopSrv).isEnabled();
 
         when(controllerMock.isBtListenerRunning()).thenReturn(false);
         btnStopSrv.performClick();
+        verify(controllerMock).stopBtAdapterListener();
 
         assertThat(btnStartSrv).isEnabled();
         assertThat(btnStopSrv).isDisabled();
@@ -70,21 +76,23 @@ public class ActivityTest {
 
     @Test
     public void startSco_checkEnabledButtons_stopSco_checkEnabledButtons() {
+        // все аналогично методу startBtAdapterListener_checkEnabledButtons_stopService_checkEnabledButtons()
         Button btnOn = (Button) mainActivity.findViewById(R.id.am_btn_startSco);
         Button btnOff = (Button) mainActivity.findViewById(R.id.am_btn_stopSco);
 
-        // проверяем состояние доступности кнопок управления Sco вещанием
         assertThat(btnOn).isEnabled();
         assertThat(btnOff).isDisabled();
-        // перед вызовом клика кнопки, подключаем мок с нужным ответом
+
         when(mAudioManagerMock.isBluetoothScoOn()).thenReturn(true);
         btnOn.performClick();
-        // далее повторяем цикл для разных кнопок
+        verify(controllerMock).startSco();
+
         assertThat(btnOn).isDisabled();
         assertThat(btnOff).isEnabled();
 
         when(mAudioManagerMock.isBluetoothScoOn()).thenReturn(false);
         btnOff.performClick();
+        verify(controllerMock).stopSco();
 
         assertThat(btnOn).isEnabled();
         assertThat(btnOff).isDisabled();
