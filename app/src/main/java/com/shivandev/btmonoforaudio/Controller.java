@@ -10,12 +10,10 @@ public class Controller {
 
 	public void stopBtAdapterListener() {
 		mBtListenerBCastRec.unregister();
-//        context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
     public void startBtAdapterListener() {
 		mBtListenerBCastRec.register();
-//        context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
     public void stopSco() {

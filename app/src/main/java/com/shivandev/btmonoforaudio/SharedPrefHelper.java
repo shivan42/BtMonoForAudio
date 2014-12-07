@@ -1,13 +1,10 @@
 package com.shivandev.btmonoforaudio;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.google.inject.Inject;
-
 public class SharedPrefHelper {
-	@Inject
-	static SharedPreferences sharedPref = getPreferences(MODE_PRIVATE);
-// todo разобраться можно ли сделать префернсы статичными и можно проверять работу программы
+	static SharedPreferences sharedPref = App.getContext().getSharedPreferences("common_pref", Context.MODE_PRIVATE);
 	/**
 	 * classic types: String, Int, Boolean
 	 */

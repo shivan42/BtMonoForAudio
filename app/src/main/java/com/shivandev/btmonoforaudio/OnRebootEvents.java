@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 public class OnRebootEvents extends BroadcastReceiver {
-	public OnRebootEvents() {
-	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

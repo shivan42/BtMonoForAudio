@@ -82,6 +82,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
                 controller.startSco();
+                // todo на момент обновления интерфейса состояние SCO еще не успевает измениться и кнопки не меняют параметра доступности, тогда как сервис срабатывает
                 refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_stopSco:

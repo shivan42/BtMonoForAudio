@@ -26,8 +26,8 @@ public class BtListenerBCastRec extends BroadcastReceiver {
 	}
 
 	public void unregister() {
-		context.unregisterReceiver(this);
-		Prefs.IS_BT_LISTENER_RUN.set(false);
+        Prefs.IS_BT_LISTENER_RUN.set(false);
+        context.unregisterReceiver(this);
 	}
 
     @Override
