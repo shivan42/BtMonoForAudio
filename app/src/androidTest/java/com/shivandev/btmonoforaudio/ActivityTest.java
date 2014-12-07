@@ -12,7 +12,8 @@ import org.robolectric.Robolectric;
 
 import roboguice.RoboGuice;
 
-import static org.fest.assertions.api.ANDROID.assertThat;
+//import static org.fest.assertions.api.ANDROID.assertThat;
+import static org.assertj.android.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

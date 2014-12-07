@@ -15,7 +15,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -32,8 +32,8 @@ dependencies {
     //    TestCompile 'com.squareup:fest-android:1.0.+'
     androidTestCompile 'junit:junit:4.11'
     androidTestCompile 'org.robolectric:robolectric:2.4'
-//    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
+    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
 //    androidTestCompile project.files("$project.buildDir/intermediates/exploded-aar/com.squareup.assertj/assertj-android/1.0.0/classes.jar")
-    androidTestCompile 'com.squareup:fest-android:1.0.+'
+//    androidTestCompile 'com.squareup:fest-android:1.0.+'
     androidTestCompile "org.mockito:mockito-core:1.+"
 }
