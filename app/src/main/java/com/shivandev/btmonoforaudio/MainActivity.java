@@ -43,6 +43,13 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
         refreshInterfaceScoButtons();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshInterfaceBtAdapterButtons();
+        refreshInterfaceScoButtons();
+    }
+
     private void refreshInterfaceBtAdapterButtons() {
         isBtAdapterListenerServiceRun = controller.isBtListenerRunning();
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
@@ -83,6 +90,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
             case R.id.am_btn_startSco:
                 controller.startSco();
                 // todo на момент обновления интерфейса состояние SCO еще не успевает измениться и кнопки не меняют параметра доступности, тогда как сервис срабатывает
+                // надо организовать подписку на действия сервиса работающего с Sco чтобы оперативно обновлять интерфейс
                 refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_stopSco:
