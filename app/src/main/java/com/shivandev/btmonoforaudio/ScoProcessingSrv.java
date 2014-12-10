@@ -13,6 +13,9 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import roboguice.service.RoboService;
 
 public class ScoProcessingSrv extends RoboService {
@@ -20,12 +23,14 @@ public class ScoProcessingSrv extends RoboService {
     private static final boolean IS_DEBUG_THIS_MODULE = true;
     public static final String EXTRA_MODE = "EXTRA_MODE";
 
+    @Inject private Observable notifier;
     @Inject private AudioManager mAudioManager;
     @Inject private Handler handler;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
     private BroadcastReceiver phoneCallListenerRec = null;
     private boolean isScoOn;
     private boolean restartAfterCall;
+    private boolean isMusicControlNeed = false;
 //    private int oldMediaVolume = -1;
 //    private int oldBtVolume = -1;
 
@@ -60,7 +65,7 @@ public class ScoProcessingSrv extends RoboService {
 
     @Override
     public void onDestroy() {
-        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.pause"));
+        if (isMusicControlNeed) getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.pause"));
         log("togglepause");
         stopSCO();
         if (phoneCallListenerRec != null) {
@@ -109,6 +114,7 @@ public class ScoProcessingSrv extends RoboService {
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
         mAudioManager.stopBluetoothSco();
         mAudioManager.setBluetoothScoOn(false);
+        notifier.notifyObservers();
         log("STOP BluetoothSco");
         /*
         this.mNM.cancel(1001);
@@ -118,8 +124,15 @@ public class ScoProcessingSrv extends RoboService {
         */
     }
 
+    public void addListener(Observer observer) {
+        notifier.addObserver(observer);
+    }
 
-    @Override
+    public void deleteListener(Observer observer) {
+        notifier.deleteObserver(observer);
+    }
+
+        @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
@@ -174,6 +187,7 @@ public class ScoProcessingSrv extends RoboService {
                         phoneCallListenerRec = new PhoneStateBCastRec();
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
+                    notifier.notifyObservers();
 
 //                    unregisterReceiver(this);
                     /*
@@ -186,7 +200,7 @@ public class ScoProcessingSrv extends RoboService {
                         @Override
                         public void run() {
                             if (!restartAfterCall) {
-                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+                                if (isMusicControlNeed) getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
 //                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
                                 log("togglepause");
                             }

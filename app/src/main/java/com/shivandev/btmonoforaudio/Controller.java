@@ -4,9 +4,12 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 
+import java.util.Observer;
+
 public class Controller {
-    @Inject Context context;
+    @Inject private Context context;
 	@Inject private BtListenerBCastRec mBtListenerBCastRec;
+    @Inject private ScoProcessingSrv mScoProcessingSrv;
 
 	public void stopBtAdapterListener() {
 		mBtListenerBCastRec.unregister();
@@ -26,6 +29,14 @@ public class Controller {
 
     public boolean isBtListenerRunning(){
         return Prefs.IS_BT_LISTENER_RUN.getBool();
+    }
+
+    public void startScoListener(Observer observer) {
+        mScoProcessingSrv.addListener(observer);
+    }
+
+    public void stopScoListener(Observer observer) {
+        mScoProcessingSrv.deleteListener(observer);
     }
 //    public boolean isBtListenerRunning(String serviceClassName){
 //        ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);

@@ -11,11 +11,14 @@ import android.widget.Button;
 
 import com.google.inject.Inject;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 
-public class MainActivity extends RoboActivity implements View.OnClickListener {
+public class MainActivity extends RoboActivity implements View.OnClickListener, Observer {
 
     @InjectView(R.id.am_btn_startSco) private Button onBtn;
     @InjectView(R.id.am_btn_stopSco) private Button offBtn;
@@ -24,8 +27,6 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
 
     @Inject private Controller controller;
     @Inject private AudioManager mAudioManager;
-    private boolean isBtAdapterListenerServiceRun;
-    private boolean isScoServiceRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +39,6 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
         stopServiceBtn.setOnClickListener(this);
 
         findViewById(R.id.command).setOnClickListener(this);
-
-        refreshInterfaceBtAdapterButtons();
-        refreshInterfaceScoButtons();
     }
 
     @Override
@@ -48,16 +46,24 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
         super.onResume();
         refreshInterfaceBtAdapterButtons();
         refreshInterfaceScoButtons();
+        // todo проверить почему обсервер (сама активити) не передается для слежения за Сервисом
+        controller.startScoListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        controller.stopScoListener(this);
     }
 
     private void refreshInterfaceBtAdapterButtons() {
-        isBtAdapterListenerServiceRun = controller.isBtListenerRunning();
+        boolean isBtAdapterListenerServiceRun = controller.isBtListenerRunning();
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
         stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }
 
     private void refreshInterfaceScoButtons() {
-        isScoServiceRun = mAudioManager.isBluetoothScoOn();
+        boolean isScoServiceRun = mAudioManager.isBluetoothScoOn();
         onBtn.setEnabled(!isScoServiceRun);
         offBtn.setEnabled(isScoServiceRun);
     }
@@ -89,13 +95,11 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
                 controller.startSco();
-                // todo на момент обновления интерфейса состояние SCO еще не успевает измениться и кнопки не меняют параметра доступности, тогда как сервис срабатывает
-                // надо организовать подписку на действия сервиса работающего с Sco чтобы оперативно обновлять интерфейс
-                refreshInterfaceScoButtons();
+//                refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_stopSco:
                 controller.stopSco();
-                refreshInterfaceScoButtons();
+//                refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_startBtAdapterListener:
                 controller.startBtAdapterListener();
@@ -114,5 +118,10 @@ public class MainActivity extends RoboActivity implements View.OnClickListener {
                 }, 1000);
                 break;
         }
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        refreshInterfaceScoButtons();
     }
 }
