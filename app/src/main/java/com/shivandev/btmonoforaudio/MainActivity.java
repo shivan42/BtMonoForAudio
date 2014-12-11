@@ -46,7 +46,6 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         super.onResume();
         refreshInterfaceBtAdapterButtons();
         refreshInterfaceScoButtons();
-        // todo проверить почему обсервер (сама активити) не передается для слежения за Сервисом
         controller.startScoListener(this);
     }
 
@@ -57,7 +56,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     }
 
     private void refreshInterfaceBtAdapterButtons() {
-        boolean isBtAdapterListenerServiceRun = controller.isBtListenerRunning();
+        boolean isBtAdapterListenerServiceRun = controller.isBtListenerRunning(BtListenerSrv.class.getName());
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
         stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }

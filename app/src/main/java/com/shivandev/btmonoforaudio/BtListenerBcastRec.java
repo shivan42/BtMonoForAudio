@@ -4,31 +4,31 @@ import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.util.Log;
 
 import com.google.inject.Inject;
 
-public class BtListenerBCastRec extends BroadcastReceiver {
+public class BtListenerBcastRec extends BroadcastReceiver {
     private static final boolean IS_DEBUG_THIS_MODULE = true;
 
 	@Inject Context context;
+    @Inject private ScoProcessingSrv mScoProcessingSrv;
 
     void log(String str) {
         if (IS_DEBUG_THIS_MODULE) Log.e("SCO Service", str);
     }
 
-	public void register() {
-		IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
-		context.registerReceiver(this, filter);
-		Prefs.IS_BT_LISTENER_RUN.set(true);
-	}
-
-	public void unregister() {
-        Prefs.IS_BT_LISTENER_RUN.set(false);
-        context.unregisterReceiver(this);
-	}
+//	public void register() {
+//		IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
+//		context.registerReceiver(this, filter);
+//		Prefs.IS_BT_LISTENER_RUN.set(true);
+//	}
+//
+//	public void unregister() {
+//        Prefs.IS_BT_LISTENER_RUN.set(false);
+//        context.unregisterReceiver(this);
+//	}
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -39,7 +39,7 @@ public class BtListenerBCastRec extends BroadcastReceiver {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        context.startService(ScoProcessingSrv.createStartScoIntent(context));
+                        context.startService(mScoProcessingSrv.createStartScoIntent(context));
                     }
                 }, 2000);
                 break;

@@ -39,13 +39,13 @@ public class ScoProcessingSrv extends RoboService {
         STOP_SCO;
     }
 
-    public static Intent createStartScoIntent(Context context) {
+    public Intent createStartScoIntent(Context context) {
         Intent intent = new Intent(context, ScoProcessingSrv.class);
         intent.putExtra(EXTRA_MODE, Mode.START_SCO);
         return intent;
     }
 
-    public static Intent createStopScoIntent(Context context) {
+    public Intent createStopScoIntent(Context context) {
         Intent intent = new Intent(context, ScoProcessingSrv.class);
         intent.putExtra(EXTRA_MODE, Mode.STOP_SCO);
         return intent;
@@ -125,6 +125,7 @@ public class ScoProcessingSrv extends RoboService {
     }
 
     public void addListener(Observer observer) {
+        //todo какого гхыра из активити на Onresume все регится на один инстанс Обсервера, а нотифай в сервисе происходит другому инстансу обсервера, а дестрой опять первому. Погуглить
         notifier.addObserver(observer);
     }
 
