@@ -10,14 +10,24 @@ import com.shivandev.btmonoforaudio.model.BtListenerSrv;
 import com.shivandev.btmonoforaudio.model.ScoProcessingSrv;
 
 import java.util.List;
+import java.util.Observable;
 import java.util.Observer;
 
 public class MainActivityController {
+    private static ScoStateObserve notifier = new ScoStateObserve();
     @Inject private Context context;
-	@Inject private BtListenerBCastRec mBtListenerBCastRec;
+    @Inject private BtListenerBCastRec mBtListenerBCastRec;
     @Inject private ScoProcessingSrv mScoProcessingSrv;
 
-	public void stopBtAdapterListener() {
+//    public static void addListener(Observer observer) {
+//        notifier.addObserver(observer);
+//    }
+//
+//    public static void deleteListener(Observer observer) {
+//        notifier.deleteObserver(observer);
+//    }
+
+    public void stopBtAdapterListener() {
 //		mBtListenerBcastRec.unregister();
         context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
@@ -36,11 +46,13 @@ public class MainActivityController {
     }
 
     public void startScoListener(Observer observer) {
-        ScoProcessingSrv.addListener(observer);
+//        addListener(observer);
+        notifier.addObserver(observer);
     }
 
     public void stopScoListener(Observer observer) {
-        ScoProcessingSrv.deleteListener(observer);
+//        deleteListener(observer);
+        notifier.deleteObserver(observer);
     }
 
 //    public boolean isBtListenerRunning(){
@@ -57,5 +69,16 @@ public class MainActivityController {
             }
         }
         return false;
+    }
+
+    public static void scoStateChanged() {
+        notifier.scoStateChanged();
+    }
+
+    static class ScoStateObserve extends Observable {
+        public void scoStateChanged() {
+            setChanged();
+            notifyObservers();
+        }
     }
 }

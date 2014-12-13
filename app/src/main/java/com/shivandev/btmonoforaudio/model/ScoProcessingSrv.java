@@ -12,9 +12,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.inject.Inject;
-
-import java.util.Observable;
-import java.util.Observer;
+import com.shivandev.btmonoforaudio.views.MainActivityController;
 
 import roboguice.service.RoboService;
 
@@ -23,7 +21,6 @@ public class ScoProcessingSrv extends RoboService {
     private static final boolean IS_DEBUG_THIS_MODULE = true;
     public static final String EXTRA_MODE = "EXTRA_MODE";
 
-    private static ScoStateObserve notifier = new ScoStateObserve();
     @Inject private AudioManager mAudioManager;
     @Inject private Handler handler;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
@@ -114,7 +111,7 @@ public class ScoProcessingSrv extends RoboService {
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
         mAudioManager.stopBluetoothSco();
         mAudioManager.setBluetoothScoOn(false);
-        notifier.scoStateChanged();
+        MainActivityController.scoStateChanged();
         log("STOP BluetoothSco");
         /*
         this.mNM.cancel(1001);
@@ -124,15 +121,7 @@ public class ScoProcessingSrv extends RoboService {
         */
     }
 
-    public static void addListener(Observer observer) {
-        notifier.addObserver(observer);
-    }
-
-    public static void deleteListener(Observer observer) {
-        notifier.deleteObserver(observer);
-    }
-
-        @Override
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
@@ -187,7 +176,7 @@ public class ScoProcessingSrv extends RoboService {
                         phoneCallListenerRec = new PhoneStateBCastRec();
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
-                    notifier.scoStateChanged();
+                    MainActivityController.scoStateChanged();
 
 //                    unregisterReceiver(this);
                     /*
@@ -220,13 +209,7 @@ public class ScoProcessingSrv extends RoboService {
         }
     }
 
-    static class ScoStateObserve extends Observable {
-        public void scoStateChanged() {
-            setChanged();
-            notifyObservers();
-        }
-    }
-//    void playStartSound()
+    //    void playStartSound()
 //    {
 //        if (!MBTPreferences.playsound) {
 //            return;
