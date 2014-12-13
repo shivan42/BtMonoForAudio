@@ -51,6 +51,14 @@ public class MainActivityController {
         notifier.scoStateChanged();
     }
 
+    public void setControlMusicPlayerOption(boolean isNeeded) {
+
+    }
+
+    public void setStartServiceAfterRebootOption(boolean isNeeded) {
+
+    }
+
     static class ScoStateObserve extends Observable {
         public void scoStateChanged() {
             setChanged();

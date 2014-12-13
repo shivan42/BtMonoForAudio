@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.R;
@@ -17,12 +19,14 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 
-public class MainActivity extends RoboActivity implements View.OnClickListener, Observer {
+public class MainActivity extends RoboActivity implements View.OnClickListener, Observer, CompoundButton.OnCheckedChangeListener {
 
     @InjectView(R.id.am_btn_startSco) private Button onBtn;
     @InjectView(R.id.am_btn_stopSco) private Button offBtn;
     @InjectView(R.id.am_btn_startBtAdapterListener) private Button startServiceBtn;
     @InjectView(R.id.am_btn_stopBtAdapterListener) private Button stopServiceBtn;
+    @InjectView(R.id.am_chb_controlMusicPlayer) private CheckBox controlMusicPlayerOptionChB;
+    @InjectView(R.id.am_chb_startBtServiceAfterReboot) private CheckBox startBtServiceAfterRebootOptionChB;
 
     @Inject private MainActivityController mainActivityController;
     @Inject private AudioManager mAudioManager;
@@ -36,6 +40,8 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         offBtn.setOnClickListener(this);
         startServiceBtn.setOnClickListener(this);
         stopServiceBtn.setOnClickListener(this);
+        controlMusicPlayerOptionChB.setOnCheckedChangeListener(this);
+        startBtServiceAfterRebootOptionChB.setOnCheckedChangeListener(this);
 
         findViewById(R.id.command).setOnClickListener(this);
     }
@@ -120,5 +126,17 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     @Override
     public void update(Observable observable, Object data) {
         refreshInterfaceScoButtons();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.am_chb_controlMusicPlayer:
+                mainActivityController.setControlMusicPlayerOption(isChecked);
+                break;
+            case R.id.am_chb_startBtServiceAfterReboot:
+                mainActivityController.setStartServiceAfterRebootOption(isChecked);
+                break;
+        }
     }
 }
