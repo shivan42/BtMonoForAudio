@@ -7,13 +7,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.google.inject.Inject;
-
 public class BtListenerBcastRec extends BroadcastReceiver {
     private static final boolean IS_DEBUG_THIS_MODULE = true;
-
-	@Inject Context context;
-    @Inject private ScoProcessingSrv mScoProcessingSrv;
 
     void log(String str) {
         if (IS_DEBUG_THIS_MODULE) Log.e("SCO Service", str);
@@ -39,7 +34,7 @@ public class BtListenerBcastRec extends BroadcastReceiver {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        context.startService(mScoProcessingSrv.createStartScoIntent(context));
+                        context.startService(ScoProcessingSrv.createStartScoIntent(context));
                     }
                 }, 2000);
                 break;

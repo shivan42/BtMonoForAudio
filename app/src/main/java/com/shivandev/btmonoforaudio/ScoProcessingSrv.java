@@ -23,7 +23,7 @@ public class ScoProcessingSrv extends RoboService {
     private static final boolean IS_DEBUG_THIS_MODULE = true;
     public static final String EXTRA_MODE = "EXTRA_MODE";
 
-    @Inject private Observable notifier;
+    private static ScoStateObserve notifier = new ScoStateObserve();
     @Inject private AudioManager mAudioManager;
     @Inject private Handler handler;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
@@ -36,16 +36,16 @@ public class ScoProcessingSrv extends RoboService {
 
     public static enum Mode {
         START_SCO,
-        STOP_SCO;
+        STOP_SCO
     }
 
-    public Intent createStartScoIntent(Context context) {
+    public static Intent createStartScoIntent(Context context) {
         Intent intent = new Intent(context, ScoProcessingSrv.class);
         intent.putExtra(EXTRA_MODE, Mode.START_SCO);
         return intent;
     }
 
-    public Intent createStopScoIntent(Context context) {
+    public static Intent createStopScoIntent(Context context) {
         Intent intent = new Intent(context, ScoProcessingSrv.class);
         intent.putExtra(EXTRA_MODE, Mode.STOP_SCO);
         return intent;
@@ -114,7 +114,7 @@ public class ScoProcessingSrv extends RoboService {
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
         mAudioManager.stopBluetoothSco();
         mAudioManager.setBluetoothScoOn(false);
-        notifier.notifyObservers();
+        notifier.scoStateChanged();
         log("STOP BluetoothSco");
         /*
         this.mNM.cancel(1001);
@@ -124,12 +124,11 @@ public class ScoProcessingSrv extends RoboService {
         */
     }
 
-    public void addListener(Observer observer) {
-        //todo какого гхыра из активити на Onresume все регится на один инстанс Обсервера, а нотифай в сервисе происходит другому инстансу обсервера, а дестрой опять первому. Погуглить
+    public static void addListener(Observer observer) {
         notifier.addObserver(observer);
     }
 
-    public void deleteListener(Observer observer) {
+    public static void deleteListener(Observer observer) {
         notifier.deleteObserver(observer);
     }
 
@@ -188,7 +187,7 @@ public class ScoProcessingSrv extends RoboService {
                         phoneCallListenerRec = new PhoneStateBCastRec();
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
-                    notifier.notifyObservers();
+                    notifier.scoStateChanged();
 
 //                    unregisterReceiver(this);
                     /*
@@ -221,6 +220,12 @@ public class ScoProcessingSrv extends RoboService {
         }
     }
 
+    static class ScoStateObserve extends Observable {
+        public void scoStateChanged() {
+            setChanged();
+            notifyObservers();
+        }
+    }
 //    void playStartSound()
 //    {
 //        if (!MBTPreferences.playsound) {

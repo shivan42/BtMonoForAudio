@@ -25,19 +25,19 @@ public class Controller {
     }
 
     public void stopSco() {
-        context.startService(mScoProcessingSrv.createStopScoIntent(context.getApplicationContext()));
+        context.startService(ScoProcessingSrv.createStopScoIntent(context.getApplicationContext()));
     }
 
     public void startSco() {
-        context.startService(mScoProcessingSrv.createStartScoIntent(context.getApplicationContext()));
+        context.startService(ScoProcessingSrv.createStartScoIntent(context.getApplicationContext()));
     }
 
     public void startScoListener(Observer observer) {
-        mScoProcessingSrv.addListener(observer);
+        ScoProcessingSrv.addListener(observer);
     }
 
     public void stopScoListener(Observer observer) {
-        mScoProcessingSrv.deleteListener(observer);
+        ScoProcessingSrv.deleteListener(observer);
     }
 
 //    public boolean isBtListenerRunning(){
