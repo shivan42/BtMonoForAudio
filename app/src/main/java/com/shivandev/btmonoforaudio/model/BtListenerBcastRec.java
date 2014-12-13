@@ -14,17 +14,6 @@ public class BtListenerBCastRec extends BroadcastReceiver {
         if (IS_DEBUG_THIS_MODULE) Log.e("SCO Service", str);
     }
 
-//	public void register() {
-//		IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
-//		context.registerReceiver(this, filter);
-//		Prefs.IS_BT_LISTENER_RUN.set(true);
-//	}
-//
-//	public void unregister() {
-//        Prefs.IS_BT_LISTENER_RUN.set(false);
-//        context.unregisterReceiver(this);
-//	}
-
     @Override
     public void onReceive(final Context context, Intent intent) {
         int state = intent.getIntExtra(BluetoothHeadset.EXTRA_STATE, -1);

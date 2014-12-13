@@ -10,7 +10,7 @@ public class SharedPrefHelper {
 	/**
 	 * classic types: String, Int, Boolean
 	 */
-	static enum Types {
+	public static enum Types {
 		STR, INT, BOOL
 	}
 
