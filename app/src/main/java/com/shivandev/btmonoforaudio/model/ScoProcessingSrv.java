@@ -62,8 +62,7 @@ public class ScoProcessingSrv extends RoboService {
 
     @Override
     public void onDestroy() {
-        if (isMusicControlNeed) getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.pause"));
-        log("togglepause");
+        togglePlayAndPauseAndroidMusicService();
         stopSCO();
         if (phoneCallListenerRec != null) {
             unregisterReceiver(phoneCallListenerRec);
@@ -189,9 +188,7 @@ public class ScoProcessingSrv extends RoboService {
                         @Override
                         public void run() {
                             if (!restartAfterCall) {
-                                if (isMusicControlNeed) getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
-//                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
-                                log("togglepause");
+                                togglePlayAndPauseAndroidMusicService();
                             }
                             restartAfterCall = false;
                         }
@@ -206,6 +203,15 @@ public class ScoProcessingSrv extends RoboService {
                     log("SCO_AUDIO_STATE_ERROR");
                     break;
             }
+        }
+    }
+
+    private void togglePlayAndPauseAndroidMusicService() {
+        if (isMusicControlNeed) {
+            // TODO надо добавить проверку - запущен ли musicService и если нет, то принудительно его запустить до отпавки команд
+            getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+//                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
+            log("togglepause");
         }
     }
 

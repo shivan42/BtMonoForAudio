@@ -109,6 +109,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+//                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
                         getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
                     }
                 }, 1000);
