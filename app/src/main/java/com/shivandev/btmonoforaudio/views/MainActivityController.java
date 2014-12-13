@@ -1,6 +1,5 @@
 package com.shivandev.btmonoforaudio.views;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 
@@ -8,8 +7,8 @@ import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.model.BtListenerBCastRec;
 import com.shivandev.btmonoforaudio.model.BtListenerSrv;
 import com.shivandev.btmonoforaudio.model.ScoProcessingSrv;
+import com.shivandev.btmonoforaudio.utils.ServiceUtils;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,22 +17,13 @@ public class MainActivityController {
     @Inject private Context context;
     @Inject private BtListenerBCastRec mBtListenerBCastRec;
     @Inject private ScoProcessingSrv mScoProcessingSrv;
-
-//    public static void addListener(Observer observer) {
-//        notifier.addObserver(observer);
-//    }
-//
-//    public static void deleteListener(Observer observer) {
-//        notifier.deleteObserver(observer);
-//    }
+    @Inject private ServiceUtils serviceUtils;
 
     public void stopBtAdapterListener() {
-//		mBtListenerBcastRec.unregister();
         context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
     public void startBtAdapterListener() {
-//		mBtListenerBcastRec.register();
         context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
@@ -46,29 +36,15 @@ public class MainActivityController {
     }
 
     public void startScoListener(Observer observer) {
-//        addListener(observer);
         notifier.addObserver(observer);
     }
 
     public void stopScoListener(Observer observer) {
-//        deleteListener(observer);
         notifier.deleteObserver(observer);
     }
 
-//    public boolean isBtListenerRunning(){
-//        return Prefs.IS_BT_LISTENER_RUN.getBool();
-//    }
-
-    public boolean isBtListenerRunning(String serviceClassName){
-        ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
-
-        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-            if (runningServiceInfo.service.getClassName().equals(serviceClassName)){
-                return true;
-            }
-        }
-        return false;
+    public boolean isBtListenerRunning(){
+        return serviceUtils.isServiceRunning(BtListenerSrv.class.getName());
     }
 
     public static void scoStateChanged() {

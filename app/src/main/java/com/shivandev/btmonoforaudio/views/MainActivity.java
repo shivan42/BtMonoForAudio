@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.R;
-import com.shivandev.btmonoforaudio.model.BtListenerSrv;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -58,7 +55,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     }
 
     private void refreshInterfaceBtAdapterButtons() {
-        boolean isBtAdapterListenerServiceRun = mainActivityController.isBtListenerRunning(BtListenerSrv.class.getName());
+        boolean isBtAdapterListenerServiceRun = mainActivityController.isBtListenerRunning();
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
         stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }
@@ -69,38 +66,36 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         offBtn.setEnabled(isScoServiceRun);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
                 mainActivityController.startSco();
-//                refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_stopSco:
                 mainActivityController.stopSco();
-//                refreshInterfaceScoButtons();
                 break;
             case R.id.am_btn_startBtAdapterListener:
                 mainActivityController.startBtAdapterListener();

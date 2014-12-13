@@ -1,5 +1,7 @@
 package com.shivandev.btmonoforaudio.common;
 
+import com.shivandev.btmonoforaudio.utils.SharedPrefHelper;
+
 public enum Prefs {
 	IS_BT_LISTENER_RUN(SharedPrefHelper.Types.BOOL);
 

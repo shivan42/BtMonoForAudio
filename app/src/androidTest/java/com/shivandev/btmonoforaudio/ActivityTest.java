@@ -4,9 +4,8 @@ import android.media.AudioManager;
 import android.widget.Button;
 
 import com.google.inject.AbstractModule;
-import com.shivandev.btmonoforaudio.model.BtListenerSrv;
-import com.shivandev.btmonoforaudio.views.MainActivityController;
 import com.shivandev.btmonoforaudio.views.MainActivity;
+import com.shivandev.btmonoforaudio.views.MainActivityController;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +14,12 @@ import org.robolectric.Robolectric;
 
 import roboguice.RoboGuice;
 
-//import static org.fest.assertions.api.ANDROID.assertThat;
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+//import static org.fest.assertions.api.ANDROID.assertThat;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class ActivityTest {
@@ -31,7 +31,7 @@ public class ActivityTest {
     @Before
     public  void setUp() {
         RoboGuice.overrideApplicationInjector(Robolectric.application, new MyTestModule());
-        when(mainActivityControllerMock.isBtListenerRunning(BtListenerSrv.class.getName())).thenReturn(false);
+        when(mainActivityControllerMock.isBtListenerRunning()).thenReturn(false);
         when(mAudioManagerMock.isBluetoothScoOn()).thenReturn(false);
         mainActivity = Robolectric.buildActivity(MainActivity.class).create().start().resume().get();
     }
@@ -60,7 +60,7 @@ public class ActivityTest {
         assertThat(btnStartSrv).isEnabled();
         assertThat(btnStopSrv).isDisabled();
         // перед вызовом клика кнопки, подключаем мок с нужным ответом
-        when(mainActivityControllerMock.isBtListenerRunning(BtListenerSrv.class.getName())).thenReturn(true);
+        when(mainActivityControllerMock.isBtListenerRunning()).thenReturn(true);
         // вызываем клик
         btnStartSrv.performClick();
         // проверяем был ли вызван определенный метод
@@ -69,7 +69,7 @@ public class ActivityTest {
         assertThat(btnStartSrv).isDisabled();
         assertThat(btnStopSrv).isEnabled();
 
-        when(mainActivityControllerMock.isBtListenerRunning(BtListenerSrv.class.getName())).thenReturn(false);
+        when(mainActivityControllerMock.isBtListenerRunning()).thenReturn(false);
         btnStopSrv.performClick();
         verify(mainActivityControllerMock).stopBtAdapterListener();
 

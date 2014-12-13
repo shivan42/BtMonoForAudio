@@ -1,7 +1,9 @@
-package com.shivandev.btmonoforaudio.common;
+package com.shivandev.btmonoforaudio.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.shivandev.btmonoforaudio.common.App;
 
 public class SharedPrefHelper {
 	static SharedPreferences sharedPref = App.getContext().getSharedPreferences("common_pref", Context.MODE_PRIVATE);

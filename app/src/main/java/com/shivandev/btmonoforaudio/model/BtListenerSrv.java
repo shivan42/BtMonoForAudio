@@ -18,7 +18,6 @@ public class BtListenerSrv extends RoboService {
     @Override
     public void onCreate() {
         super.onCreate();
-//        mBtListenerBCastRec = new BtListenerBCastRec();
         IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
         registerReceiver(mBtListenerBCastRec, filter);
     }
