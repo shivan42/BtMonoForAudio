@@ -12,7 +12,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.inject.Inject;
-import com.shivandev.btmonoforaudio.views.MainActivityController;
+import com.shivandev.btmonoforaudio.common.Prefs;
+import com.shivandev.btmonoforaudio.views.Controller;
 
 import roboguice.service.RoboService;
 
@@ -27,8 +28,7 @@ public class ScoProcessingSrv extends RoboService {
     private BroadcastReceiver phoneCallListenerRec = null;
     private boolean isScoOn;
     private boolean restartAfterCall;
-    private boolean isMusicControlNeed = true;
-//    private int oldMediaVolume = -1;
+    //    private int oldMediaVolume = -1;
 //    private int oldBtVolume = -1;
 
     public static enum Mode {
@@ -110,7 +110,7 @@ public class ScoProcessingSrv extends RoboService {
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
         mAudioManager.stopBluetoothSco();
         mAudioManager.setBluetoothScoOn(false);
-        MainActivityController.scoStateChanged();
+        Controller.scoStateChanged();
         log("STOP BluetoothSco");
         /*
         this.mNM.cancel(1001);
@@ -175,7 +175,7 @@ public class ScoProcessingSrv extends RoboService {
                         phoneCallListenerRec = new PhoneStateBCastRec();
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
-                    MainActivityController.scoStateChanged();
+                    Controller.scoStateChanged();
 
 //                    unregisterReceiver(this);
                     /*
@@ -207,7 +207,7 @@ public class ScoProcessingSrv extends RoboService {
     }
 
     private void togglePlayAndPauseAndroidMusicService() {
-        if (isMusicControlNeed) {
+        if (Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool()) {
             // TODO надо добавить проверку - запущен ли musicService и если нет, то принудительно его запустить до отпавки команд
             getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
 //                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));

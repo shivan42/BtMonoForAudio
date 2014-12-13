@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.R;
+import com.shivandev.btmonoforaudio.common.Prefs;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -28,7 +29,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     @InjectView(R.id.am_chb_controlMusicPlayer) private CheckBox controlMusicPlayerOptionChB;
     @InjectView(R.id.am_chb_startBtServiceAfterReboot) private CheckBox startBtServiceAfterRebootOptionChB;
 
-    @Inject private MainActivityController mainActivityController;
+    @Inject private Controller controller;
     @Inject private AudioManager mAudioManager;
 
     @Override
@@ -44,6 +45,12 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         startBtServiceAfterRebootOptionChB.setOnCheckedChangeListener(this);
 
         findViewById(R.id.command).setOnClickListener(this);
+        refreshInterfaceDependedOnPrefs();
+    }
+
+    private void refreshInterfaceDependedOnPrefs() {
+        controlMusicPlayerOptionChB.setChecked(Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool());
+        startBtServiceAfterRebootOptionChB.setChecked(Prefs.IS_BT_SERVICE_START_AFTER_REBOOT.getBool());
     }
 
     @Override
@@ -51,17 +58,17 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         super.onResume();
         refreshInterfaceBtAdapterButtons();
         refreshInterfaceScoButtons();
-        mainActivityController.startScoListener(this);
+        controller.startScoListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mainActivityController.stopScoListener(this);
+        controller.stopScoListener(this);
     }
 
     private void refreshInterfaceBtAdapterButtons() {
-        boolean isBtAdapterListenerServiceRun = mainActivityController.isBtListenerRunning();
+        boolean isBtAdapterListenerServiceRun = controller.isBtListenerRunning();
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
         stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }
@@ -98,17 +105,17 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
-                mainActivityController.startSco();
+                controller.startSco();
                 break;
             case R.id.am_btn_stopSco:
-                mainActivityController.stopSco();
+                controller.stopSco();
                 break;
             case R.id.am_btn_startBtAdapterListener:
-                mainActivityController.startBtAdapterListener();
+                controller.startBtAdapterListener();
                 refreshInterfaceBtAdapterButtons();
                 break;
             case R.id.am_btn_stopBtAdapterListener:
-                mainActivityController.stopBtAdapterListener();
+                controller.stopBtAdapterListener();
                 refreshInterfaceBtAdapterButtons();
                 break;
             case R.id.command:
@@ -132,11 +139,12 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.am_chb_controlMusicPlayer:
-                mainActivityController.setControlMusicPlayerOption(isChecked);
+                controller.setControlMusicPlayerOption(isChecked);
                 break;
             case R.id.am_chb_startBtServiceAfterReboot:
-                mainActivityController.setStartServiceAfterRebootOption(isChecked);
+                controller.setStartServiceAfterRebootOption(isChecked);
                 break;
         }
+        refreshInterfaceDependedOnPrefs();
     }
 }

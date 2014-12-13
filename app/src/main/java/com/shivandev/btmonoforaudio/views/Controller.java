@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.inject.Inject;
+import com.shivandev.btmonoforaudio.common.Prefs;
 import com.shivandev.btmonoforaudio.model.BtListenerBCastRec;
 import com.shivandev.btmonoforaudio.model.BtListenerSrv;
 import com.shivandev.btmonoforaudio.model.ScoProcessingSrv;
@@ -12,7 +13,7 @@ import com.shivandev.btmonoforaudio.utils.ServiceUtils;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainActivityController {
+public class Controller {
     private static ScoStateObserve notifier = new ScoStateObserve();
     @Inject private Context context;
     @Inject private BtListenerBCastRec mBtListenerBCastRec;
@@ -24,6 +25,7 @@ public class MainActivityController {
     }
 
     public void startBtAdapterListener() {
+        // TODO добавить notify icon постоянно отображаемую во время работы сервиса
         context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
@@ -52,11 +54,11 @@ public class MainActivityController {
     }
 
     public void setControlMusicPlayerOption(boolean isNeeded) {
-
+        Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.set(isNeeded);
     }
 
     public void setStartServiceAfterRebootOption(boolean isNeeded) {
-
+        Prefs.IS_BT_SERVICE_START_AFTER_REBOOT.set(isNeeded);
     }
 
     static class ScoStateObserve extends Observable {
