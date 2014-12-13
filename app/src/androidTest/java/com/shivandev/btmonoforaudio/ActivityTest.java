@@ -4,6 +4,9 @@ import android.media.AudioManager;
 import android.widget.Button;
 
 import com.google.inject.AbstractModule;
+import com.shivandev.btmonoforaudio.model.BtListenerSrv;
+import com.shivandev.btmonoforaudio.views.MainActivityController;
+import com.shivandev.btmonoforaudio.views.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,13 +25,13 @@ import static org.mockito.Mockito.when;
 public class ActivityTest {
 
     private MainActivity mainActivity;
-    private Controller controllerMock = mock(Controller.class);
+    private MainActivityController mainActivityControllerMock = mock(MainActivityController.class);
     private AudioManager mAudioManagerMock = mock(AudioManager.class);
 
     @Before
     public  void setUp() {
         RoboGuice.overrideApplicationInjector(Robolectric.application, new MyTestModule());
-        when(controllerMock.isBtListenerRunning()).thenReturn(false);
+        when(mainActivityControllerMock.isBtListenerRunning(BtListenerSrv.class.getName())).thenReturn(false);
         when(mAudioManagerMock.isBluetoothScoOn()).thenReturn(false);
         mainActivity = Robolectric.buildActivity(MainActivity.class).create().start().resume().get();
     }
@@ -57,18 +60,18 @@ public class ActivityTest {
         assertThat(btnStartSrv).isEnabled();
         assertThat(btnStopSrv).isDisabled();
         // перед вызовом клика кнопки, подключаем мок с нужным ответом
-        when(controllerMock.isBtListenerRunning()).thenReturn(true);
+        when(mainActivityControllerMock.isBtListenerRunning(BtListenerSrv.class.getName())).thenReturn(true);
         // вызываем клик
         btnStartSrv.performClick();
         // проверяем был ли вызван определенный метод
-        verify(controllerMock).startBtAdapterListener();
+        verify(mainActivityControllerMock).startBtAdapterListener();
         // далее повторяем цикл для разных кнопок
         assertThat(btnStartSrv).isDisabled();
         assertThat(btnStopSrv).isEnabled();
 
-        when(controllerMock.isBtListenerRunning()).thenReturn(false);
+        when(mainActivityControllerMock.isBtListenerRunning(BtListenerSrv.class.getName())).thenReturn(false);
         btnStopSrv.performClick();
-        verify(controllerMock).stopBtAdapterListener();
+        verify(mainActivityControllerMock).stopBtAdapterListener();
 
         assertThat(btnStartSrv).isEnabled();
         assertThat(btnStopSrv).isDisabled();
@@ -85,14 +88,14 @@ public class ActivityTest {
 
         when(mAudioManagerMock.isBluetoothScoOn()).thenReturn(true);
         btnOn.performClick();
-        verify(controllerMock).startSco();
+        verify(mainActivityControllerMock).startSco();
 
         assertThat(btnOn).isDisabled();
         assertThat(btnOff).isEnabled();
 
         when(mAudioManagerMock.isBluetoothScoOn()).thenReturn(false);
         btnOff.performClick();
-        verify(controllerMock).stopSco();
+        verify(mainActivityControllerMock).stopSco();
 
         assertThat(btnOn).isEnabled();
         assertThat(btnOff).isDisabled();
@@ -101,7 +104,7 @@ public class ActivityTest {
     public class MyTestModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(Controller.class).toInstance(controllerMock);
+            bind(MainActivityController.class).toInstance(mainActivityControllerMock);
             bind(AudioManager.class).toInstance(mAudioManagerMock);
         }
     }

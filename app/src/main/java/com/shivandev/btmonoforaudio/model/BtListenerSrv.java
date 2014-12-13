@@ -1,4 +1,4 @@
-package com.shivandev.btmonoforaudio;
+package com.shivandev.btmonoforaudio.model;
 
 import android.bluetooth.BluetoothHeadset;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import roboguice.service.RoboService;
 
 public class BtListenerSrv extends RoboService {
-    @Inject private BtListenerBcastRec mBtListenerBcastRec;
+    @Inject private BtListenerBCastRec mBtListenerBCastRec;
 
     public BtListenerSrv() {
     }
@@ -20,7 +20,7 @@ public class BtListenerSrv extends RoboService {
         super.onCreate();
 //        mBtListenerBCastRec = new BtListenerBCastRec();
         IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
-        registerReceiver(mBtListenerBcastRec, filter);
+        registerReceiver(mBtListenerBCastRec, filter);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BtListenerSrv extends RoboService {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mBtListenerBcastRec);
+        unregisterReceiver(mBtListenerBCastRec);
     }
 
     @Override public IBinder onBind(Intent intent) { return null; }

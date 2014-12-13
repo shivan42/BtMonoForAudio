@@ -1,8 +1,10 @@
-package com.shivandev.btmonoforaudio;
+package com.shivandev.btmonoforaudio.model;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.shivandev.btmonoforaudio.common.Prefs;
 
 public class OnRebootEvents extends BroadcastReceiver {
 

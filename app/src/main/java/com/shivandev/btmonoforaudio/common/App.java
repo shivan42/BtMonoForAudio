@@ -1,4 +1,4 @@
-package com.shivandev.btmonoforaudio;
+package com.shivandev.btmonoforaudio.common;
 
 import android.app.Application;
 import android.content.Context;
