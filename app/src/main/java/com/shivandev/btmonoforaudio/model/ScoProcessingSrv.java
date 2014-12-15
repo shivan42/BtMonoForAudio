@@ -1,5 +1,6 @@
 package com.shivandev.btmonoforaudio.model;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.Prefs;
+import com.shivandev.btmonoforaudio.utils.ServiceUtils;
 import com.shivandev.btmonoforaudio.views.Controller;
 
 import roboguice.service.RoboService;
@@ -23,6 +25,8 @@ public class ScoProcessingSrv extends RoboService {
 
     @Inject private AudioManager mAudioManager;
     @Inject private Handler handler;
+    @Inject private ServiceUtils mServiceUtils;
+    @Inject NotificationManager mNotificationManager;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
     private BroadcastReceiver phoneCallListenerRec = null;
     private boolean isScoOn;
@@ -78,7 +82,6 @@ public class ScoProcessingSrv extends RoboService {
 
     private void stopSCO() {
         /*
-        stopForeground(true);
         mAudioManager.setStreamVolume(3, this.old_media_volume, 0);
         mAudioManager.setStreamVolume(6, this.old_bt_volume, 0);
         */
@@ -89,6 +92,11 @@ public class ScoProcessingSrv extends RoboService {
         mAudioManager.setBluetoothScoOn(false);
         Controller.scoStateChanged();
         log("STOP BluetoothSco");
+        stopForeground(true);
+        // проверяем запущен ли сервис наблюдения за БТ подключением, и если да, то перезапускаем его Notify
+        if (mServiceUtils.isServiceRunning(BtListenerSrv.class.getName())) {
+            mNotificationManager.notify(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
+        }
         /*
         this.mNM.cancel(1001);
         localMBTApplication.status = 1;
@@ -152,6 +160,8 @@ public class ScoProcessingSrv extends RoboService {
                         phoneCallListenerRec = new PhoneStateBCastRec();
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
+                    startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.SCO_SERVICE_RUN));
+                    // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
                     Controller.scoStateChanged();
 
 //                    unregisterReceiver(this);

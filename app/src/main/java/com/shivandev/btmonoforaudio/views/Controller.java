@@ -25,7 +25,7 @@ public class Controller {
     }
 
     public void startBtAdapterListener() {
-        // TODO добавить notify icon постоянно отображаемую во время работы сервиса
+        // TODO Провести рефакторинг модели оповещений, они как и UI должны проходить через контроллер, и может собрать их в отдельный класс, а не запускать в мдулях сервисов
         context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
