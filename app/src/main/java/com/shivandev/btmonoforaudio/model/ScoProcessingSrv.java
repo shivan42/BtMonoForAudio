@@ -20,7 +20,6 @@ import roboguice.service.RoboService;
 public class ScoProcessingSrv extends RoboService {
 
     private static final boolean IS_DEBUG_THIS_MODULE = true;
-    public static final String EXTRA_MODE = "EXTRA_MODE";
 
     @Inject private AudioManager mAudioManager;
     @Inject private Handler handler;
@@ -47,13 +46,7 @@ public class ScoProcessingSrv extends RoboService {
     @Override
     public void onCreate() {
         super.onCreate();
-//        handler = new Handler();
-//        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mScoStateUpdatedBCastRec = new ScoStateUpdatedBCastRec();
-
-//        phoneCallListenerRec = new BluetoothStateBCastRec();
-//        registerReceiver(phoneCallListenerRec, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-
     }
 
     @Override
@@ -69,7 +62,7 @@ public class ScoProcessingSrv extends RoboService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        isScoOn = mAudioManager.isBluetoothScoOn();
+//        isScoOn = mAudioManager.isBluetoothScoOn();
 		startSco();
 		super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
