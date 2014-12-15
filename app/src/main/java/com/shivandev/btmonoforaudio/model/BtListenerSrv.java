@@ -12,7 +12,7 @@ import com.shivandev.btmonoforaudio.utils.ServiceUtils;
 import roboguice.service.RoboService;
 
 public class BtListenerSrv extends RoboService {
-    @Inject private BtListenerBcastRec mBtListenerBcastRec;
+    @Inject private BtListenerBCastRec mBtListenerBCastRec;
     @Inject private ServiceUtils mServiceUtils;
     @Inject private NotificationManager mNotificationManager;
 
@@ -23,7 +23,7 @@ public class BtListenerSrv extends RoboService {
     public void onCreate() {
         super.onCreate();
         IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
-        registerReceiver(mBtListenerBcastRec, filter);
+        registerReceiver(mBtListenerBCastRec, filter);
         startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
     }
 
@@ -34,7 +34,7 @@ public class BtListenerSrv extends RoboService {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mBtListenerBcastRec);
+        unregisterReceiver(mBtListenerBCastRec);
         stopForeground(true);
         if (mServiceUtils.isServiceRunning(ScoProcessingSrv.class.getName())) {
             mNotificationManager.notify(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.SCO_SERVICE_RUN));
