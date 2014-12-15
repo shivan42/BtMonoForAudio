@@ -1,16 +1,20 @@
 package com.shivandev.btmonoforaudio.model;
 
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothHeadset;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
 import com.google.inject.Inject;
+import com.shivandev.btmonoforaudio.utils.ServiceUtils;
 
 import roboguice.service.RoboService;
 
 public class BtListenerSrv extends RoboService {
-    @Inject private BtListenerBCastRec mBtListenerBCastRec;
+    @Inject private BtListenerBcastRec mBtListenerBcastRec;
+    @Inject private ServiceUtils mServiceUtils;
+    @Inject private NotificationManager mNotificationManager;
 
     public BtListenerSrv() {
     }
@@ -19,7 +23,8 @@ public class BtListenerSrv extends RoboService {
     public void onCreate() {
         super.onCreate();
         IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
-        registerReceiver(mBtListenerBCastRec, filter);
+        registerReceiver(mBtListenerBcastRec, filter);
+        startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
     }
 
     @Override
@@ -29,8 +34,16 @@ public class BtListenerSrv extends RoboService {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mBtListenerBCastRec);
+        unregisterReceiver(mBtListenerBcastRec);
+        stopForeground(true);
+        if (mServiceUtils.isServiceRunning(ScoProcessingSrv.class.getName())) {
+            mNotificationManager.notify(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.SCO_SERVICE_RUN));
+        }
+        super.onDestroy();
     }
 
-    @Override public IBinder onBind(Intent intent) { return null; }
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 }

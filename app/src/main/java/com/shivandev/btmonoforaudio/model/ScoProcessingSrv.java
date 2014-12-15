@@ -1,7 +1,6 @@
 package com.shivandev.btmonoforaudio.model;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,16 +9,13 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.inject.Inject;
-import com.shivandev.btmonoforaudio.R;
 import com.shivandev.btmonoforaudio.common.Prefs;
+import com.shivandev.btmonoforaudio.utils.ServiceUtils;
 import com.shivandev.btmonoforaudio.views.Controller;
-import com.shivandev.btmonoforaudio.views.MainActivity;
 
 import roboguice.service.RoboService;
 
@@ -27,10 +23,11 @@ public class ScoProcessingSrv extends RoboService {
 
     private static final boolean IS_DEBUG_THIS_MODULE = true;
     public static final String EXTRA_MODE = "EXTRA_MODE";
-    public static final int ID_NOTIFY = 1337;
 
     @Inject private AudioManager mAudioManager;
     @Inject private Handler handler;
+    @Inject private ServiceUtils mServiceUtils;
+    @Inject NotificationManager mNotificationManager;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
     private BroadcastReceiver phoneCallListenerRec = null;
     private boolean isScoOn;
@@ -119,6 +116,10 @@ public class ScoProcessingSrv extends RoboService {
         Controller.scoStateChanged();
         log("STOP BluetoothSco");
         stopForeground(true);
+        // проверяем запущен ли сервис наблюдения за БТ подключением, и если да, то перезапускаем его Notify
+        if (mServiceUtils.isServiceRunning(BtListenerSrv.class.getName())) {
+            mNotificationManager.notify(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
+        }
         /*
         this.mNM.cancel(1001);
         localMBTApplication.status = 1;
@@ -159,7 +160,6 @@ public class ScoProcessingSrv extends RoboService {
     }
 
     class ScoStateUpdatedBCastRec extends BroadcastReceiver {
-        @Inject NotificationManager mNotificationManager;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -183,32 +183,8 @@ public class ScoProcessingSrv extends RoboService {
                         phoneCallListenerRec = new PhoneStateBCastRec();
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
-
-
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(ScoProcessingSrv.this)
-                                    .setSmallIcon(R.drawable.bluetooth_on)
-                                    .setContentTitle("Аудиопоток направлен на Гарнитуру");
-//                                    .setContentText("Hello World!");
-                    // интент для запуска MainActivity
-                    Intent resultIntent = new Intent(ScoProcessingSrv.this, MainActivity.class);
-                    resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(ScoProcessingSrv.this);
-                    stackBuilder.addParentStack(MainActivity.class);
-                    stackBuilder.addNextIntent(resultIntent);
-
-                    PendingIntent resultPendingIntent =
-                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//                            PendingIntent.getActivity(ScoProcessingSrv.this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    mBuilder.setContentIntent(resultPendingIntent);
-//                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    // mId allows you to update the notification later on.
-//                    mNotificationManager.notify(mId, mBuilder.build());
-
-//                    note.flags|=Notification.FLAG_NO_CLEAR;
-                    startForeground(ID_NOTIFY, mBuilder.build());
-
+                    startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.SCO_SERVICE_RUN));
+                    // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
                     Controller.scoStateChanged();
 
 //                    unregisterReceiver(this);

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-public class BtListenerBCastRec extends BroadcastReceiver {
+public class BtListenerBcastRec extends BroadcastReceiver {
     private static final boolean IS_DEBUG_THIS_MODULE = true;
 
     void log(String str) {
