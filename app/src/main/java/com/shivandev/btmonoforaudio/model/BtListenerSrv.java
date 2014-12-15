@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import roboguice.service.RoboService;
 
 public class BtListenerSrv extends RoboService {
-    @Inject private BtListenerBCastRec mBtListenerBCastRec;
+    @Inject private BtListenerBcastRec mBtListenerBcastRec;
 
     public BtListenerSrv() {
     }
@@ -19,7 +19,7 @@ public class BtListenerSrv extends RoboService {
     public void onCreate() {
         super.onCreate();
         IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
-        registerReceiver(mBtListenerBCastRec, filter);
+        registerReceiver(mBtListenerBcastRec, filter);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class BtListenerSrv extends RoboService {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mBtListenerBCastRec);
+        unregisterReceiver(mBtListenerBcastRec);
     }
 
     @Override public IBinder onBind(Intent intent) { return null; }

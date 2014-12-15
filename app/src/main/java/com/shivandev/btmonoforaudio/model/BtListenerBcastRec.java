@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-public class BtListenerBCastRec extends BroadcastReceiver {
+public class BtListenerBcastRec extends BroadcastReceiver {
     private static final boolean IS_DEBUG_THIS_MODULE = true;
 
     void log(String str) {
@@ -23,7 +23,7 @@ public class BtListenerBCastRec extends BroadcastReceiver {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        context.startService(ScoProcessingSrv.createStartScoIntent(context));
+						ScoProcessingSrv.startService(context);
                     }
                 }, 2000);
                 break;

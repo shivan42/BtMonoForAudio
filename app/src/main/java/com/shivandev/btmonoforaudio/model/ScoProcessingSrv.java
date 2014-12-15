@@ -28,25 +28,21 @@ public class ScoProcessingSrv extends RoboService {
     private BroadcastReceiver phoneCallListenerRec = null;
     private boolean isScoOn;
     private boolean restartAfterCall;
-    //    private int oldMediaVolume = -1;
+//    private int oldMediaVolume = -1;
 //    private int oldBtVolume = -1;
 
-    public static enum Mode {
-        START_SCO,
-        STOP_SCO
-    }
 
-    public static Intent createStartScoIntent(Context context) {
-        Intent intent = new Intent(context, ScoProcessingSrv.class);
-        intent.putExtra(EXTRA_MODE, Mode.START_SCO);
-        return intent;
-    }
+	private static Intent getServiceIntent(Context context) {
+		return new Intent(context, ScoProcessingSrv.class);
+	}
 
-    public static Intent createStopScoIntent(Context context) {
-        Intent intent = new Intent(context, ScoProcessingSrv.class);
-        intent.putExtra(EXTRA_MODE, Mode.STOP_SCO);
-        return intent;
-    }
+	public static void startService(Context context) {
+		context.startService(getServiceIntent(context));
+	}
+
+	public static void stopService(Context context) {
+		context.stopService(getServiceIntent(context));
+	}
 
     @Override
     public void onCreate() {
@@ -66,7 +62,6 @@ public class ScoProcessingSrv extends RoboService {
         stopSCO();
         if (phoneCallListenerRec != null) {
             unregisterReceiver(phoneCallListenerRec);
-//            phoneCallListenerRec = null;
         }
 //        stopForeground(true);
         super.onDestroy();
@@ -75,19 +70,8 @@ public class ScoProcessingSrv extends RoboService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         isScoOn = mAudioManager.isBluetoothScoOn();
-        if (intent != null) {
-            Mode modeCommand = ((Mode) intent.getSerializableExtra(EXTRA_MODE));
-            switch (modeCommand) {
-                case START_SCO:
-                    startSco();
-                    break;
-                case STOP_SCO:
-                    stopSelf();
-//                    stopSCO();
-                    break;
-            }
-        }
-        super.onStartCommand(intent, flags, startId);
+		startSco();
+		super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
     }
 

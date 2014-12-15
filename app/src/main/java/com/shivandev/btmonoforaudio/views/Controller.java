@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.Prefs;
-import com.shivandev.btmonoforaudio.model.BtListenerBCastRec;
+import com.shivandev.btmonoforaudio.model.BtListenerBcastRec;
 import com.shivandev.btmonoforaudio.model.BtListenerSrv;
 import com.shivandev.btmonoforaudio.model.ScoProcessingSrv;
 import com.shivandev.btmonoforaudio.utils.ServiceUtils;
@@ -16,7 +16,7 @@ import java.util.Observer;
 public class Controller {
     private static ScoStateObserve notifier = new ScoStateObserve();
     @Inject private Context context;
-    @Inject private BtListenerBCastRec mBtListenerBCastRec;
+    @Inject private BtListenerBcastRec mBtListenerBcastRec;
     @Inject private ScoProcessingSrv mScoProcessingSrv;
     @Inject private ServiceUtils serviceUtils;
 
@@ -29,12 +29,12 @@ public class Controller {
         context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
-    public void stopSco() {
-        context.startService(ScoProcessingSrv.createStopScoIntent(context.getApplicationContext()));
-    }
+	public void startSco() {
+		ScoProcessingSrv.startService(context);
+	}
 
-    public void startSco() {
-        context.startService(ScoProcessingSrv.createStartScoIntent(context.getApplicationContext()));
+    public void stopSco() {
+		ScoProcessingSrv.stopService(context);
     }
 
     public void startScoListener(Observer observer) {
