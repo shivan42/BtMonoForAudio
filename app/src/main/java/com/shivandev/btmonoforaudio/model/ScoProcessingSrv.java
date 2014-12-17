@@ -7,10 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.Prefs;
@@ -195,9 +198,22 @@ public class ScoProcessingSrv extends RoboService {
 
     private void togglePlayAndPauseAndroidMusicService() {
         if (Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool()) {
-            // TODO надо добавить проверку - запущен ли musicService и если нет, то принудительно его запустить до отпавки команд
-            getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
-//                                getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                long eventTime = SystemClock.uptimeMillis() - 1;
+                KeyEvent downEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, 0);
+                mAudioManager.dispatchMediaKeyEvent(downEvent);
+                eventTime++;
+                KeyEvent upEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, 0);
+                mAudioManager.dispatchMediaKeyEvent(upEvent);
+            } else {
+                Intent player = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+                sendOrderedBroadcast(player, null);
+                player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+                sendOrderedBroadcast(player, null);
+            }
+//            getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
             log("togglepause");
         }
     }

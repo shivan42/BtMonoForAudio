@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -122,8 +123,13 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        Intent player = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                        player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+                        sendOrderedBroadcast(player, null);
+                        player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+                        sendOrderedBroadcast(player, null);
 //                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
-                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+//                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
                     }
                 }, 1000);
                 break;
