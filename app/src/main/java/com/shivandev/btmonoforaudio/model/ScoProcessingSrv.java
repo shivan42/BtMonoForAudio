@@ -58,7 +58,8 @@ public class ScoProcessingSrv extends RoboService {
 
     @Override
     public void onDestroy() {
-        togglePlayAndPauseAndroidMusicService();
+        PauseAndroidMusicService();
+//        togglePlayAndPauseAndroidMusicService();
         stopSCO();
         if (phoneCallListenerRec != null) {
             unregisterReceiver(phoneCallListenerRec);
@@ -131,7 +132,7 @@ public class ScoProcessingSrv extends RoboService {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        restartAfterCall = true;
+//                        restartAfterCall = true;
                         startSco();
                     }
                 }, 1500);
@@ -177,10 +178,11 @@ public class ScoProcessingSrv extends RoboService {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (!restartAfterCall) {
-                                togglePlayAndPauseAndroidMusicService();
-                            }
-                            restartAfterCall = false;
+                            playAndroidMusicService();
+//                            if (!restartAfterCall) {
+//                                togglePlayAndPauseAndroidMusicService();
+//                            }
+//                            restartAfterCall = false;
                         }
                     }, 1000);
                     //                mAudioManager.setStreamVolume(3, mAudioManager.getStreamMaxVolume(3), 0);
@@ -196,6 +198,48 @@ public class ScoProcessingSrv extends RoboService {
         }
     }
 
+    private void playAndroidMusicService() {
+        if (Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool()) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                long eventTime = SystemClock.uptimeMillis() - 1;
+                KeyEvent downEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY, 0);
+                mAudioManager.dispatchMediaKeyEvent(downEvent);
+                eventTime++;
+                KeyEvent upEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY, 0);
+                mAudioManager.dispatchMediaKeyEvent(upEvent);
+            } else {
+                Intent player = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY));
+                sendOrderedBroadcast(player, null);
+                player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY));
+                sendOrderedBroadcast(player, null);
+            }
+//            getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+            log("play music");
+        }
+    }
+    private void PauseAndroidMusicService() {
+        if (Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool()) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                long eventTime = SystemClock.uptimeMillis() - 1;
+                KeyEvent downEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PAUSE, 0);
+                mAudioManager.dispatchMediaKeyEvent(downEvent);
+                eventTime++;
+                KeyEvent upEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PAUSE, 0);
+                mAudioManager.dispatchMediaKeyEvent(upEvent);
+            } else {
+                Intent player = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PAUSE));
+                sendOrderedBroadcast(player, null);
+                player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PAUSE));
+                sendOrderedBroadcast(player, null);
+            }
+//            getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
+            log("pause music");
+        }
+    }
     private void togglePlayAndPauseAndroidMusicService() {
         if (Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool()) {
 
