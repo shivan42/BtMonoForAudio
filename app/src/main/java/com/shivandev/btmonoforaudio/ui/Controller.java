@@ -1,5 +1,6 @@
-package com.shivandev.btmonoforaudio.views;
+package com.shivandev.btmonoforaudio.ui;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 
@@ -15,17 +16,19 @@ import java.util.Observer;
 
 public class Controller {
     private static ScoStateObserve notifier = new ScoStateObserve();
+
     @Inject private Context context;
     @Inject private BtListenerBCastRec mBtListenerBCastRec;
     @Inject private ScoProcessingSrv mScoProcessingSrv;
-    @Inject private ServiceUtils serviceUtils;
+    @Inject private ServiceUtils mServiceUtils;
+    @Inject NotificationManager mNotificationManager;
+    @Inject NotifyFactory mNotifyFactory;
 
     public void stopBtAdapterListener() {
         context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
     public void startBtAdapterListener() {
-        // TODO Провести рефакторинг модели оповещений, они как и UI должны проходить через контроллер, и может собрать их в отдельный класс, а не запускать в мдулях сервисов
         context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
@@ -46,11 +49,29 @@ public class Controller {
     }
 
     public boolean isBtListenerRunning(){
-        return serviceUtils.isServiceRunning(BtListenerSrv.class.getName());
+        return mServiceUtils.isServiceRunning(BtListenerSrv.class.getName());
     }
 
-    public static void scoStateChanged() {
+    public void notifyAboutScoStateChanged() {
+        if (ScoProcessingSrv.isScoOn()) {
+            mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
+        } else btListenerStateNotify();
         notifier.scoStateChanged();
+    }
+
+    public void notifyAboutBtListenerStateChanged() {
+        if (!ScoProcessingSrv.isScoOn()) {
+            btListenerStateNotify();
+        }
+
+    }
+
+    private void btListenerStateNotify() {
+        if (BtListenerSrv.isBtListenerRun()) {
+            mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.BT_LISTENER_SERVICE_RUN));
+        } else {
+            mNotificationManager.cancel(NotifyFactory.ID_NOTIFY);
+        }
     }
 
     public void setControlMusicPlayerOption(boolean isNeeded) {

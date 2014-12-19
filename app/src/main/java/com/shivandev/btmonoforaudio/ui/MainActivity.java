@@ -1,4 +1,4 @@
-package com.shivandev.btmonoforaudio.views;
+package com.shivandev.btmonoforaudio.ui;
 
 import android.content.Intent;
 import android.media.AudioManager;

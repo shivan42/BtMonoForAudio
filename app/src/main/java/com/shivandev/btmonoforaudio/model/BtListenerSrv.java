@@ -1,20 +1,20 @@
 package com.shivandev.btmonoforaudio.model;
 
-import android.app.NotificationManager;
 import android.bluetooth.BluetoothHeadset;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
 import com.google.inject.Inject;
-import com.shivandev.btmonoforaudio.utils.ServiceUtils;
+import com.shivandev.btmonoforaudio.ui.Controller;
 
 import roboguice.service.RoboService;
 
 public class BtListenerSrv extends RoboService {
+    private static boolean isBtListenerRun = false;
+
     @Inject private BtListenerBCastRec mBtListenerBCastRec;
-    @Inject private ServiceUtils mServiceUtils;
-    @Inject private NotificationManager mNotificationManager;
+    @Inject Controller mController;
 
     public BtListenerSrv() {
     }
@@ -24,7 +24,9 @@ public class BtListenerSrv extends RoboService {
         super.onCreate();
         IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
         registerReceiver(mBtListenerBCastRec, filter);
-        startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
+        isBtListenerRun = true;
+        mController.notifyAboutBtListenerStateChanged();
+//        startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
     }
 
     @Override
@@ -35,11 +37,14 @@ public class BtListenerSrv extends RoboService {
     @Override
     public void onDestroy() {
         unregisterReceiver(mBtListenerBCastRec);
-        stopForeground(true);
-        if (mServiceUtils.isServiceRunning(ScoProcessingSrv.class.getName())) {
-            mNotificationManager.notify(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.SCO_SERVICE_RUN));
-        }
+        isBtListenerRun = false;
+        mController.notifyAboutBtListenerStateChanged();
+//        stopForeground(true);
         super.onDestroy();
+    }
+
+    public static boolean isBtListenerRun() {
+        return isBtListenerRun;
     }
 
     @Override public IBinder onBind(Intent intent) { return null; }

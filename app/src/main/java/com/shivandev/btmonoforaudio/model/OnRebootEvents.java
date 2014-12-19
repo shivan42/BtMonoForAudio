@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.Prefs;
-import com.shivandev.btmonoforaudio.views.Controller;
+import com.shivandev.btmonoforaudio.ui.Controller;
 
 public class OnRebootEvents extends BroadcastReceiver {
     @Inject

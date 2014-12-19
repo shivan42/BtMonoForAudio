@@ -4,8 +4,8 @@ import android.media.AudioManager;
 import android.widget.Button;
 
 import com.google.inject.AbstractModule;
-import com.shivandev.btmonoforaudio.views.Controller;
-import com.shivandev.btmonoforaudio.views.MainActivity;
+import com.shivandev.btmonoforaudio.ui.Controller;
+import com.shivandev.btmonoforaudio.ui.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;

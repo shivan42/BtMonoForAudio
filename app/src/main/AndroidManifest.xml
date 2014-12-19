@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".views.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +48,7 @@
 
         <!--на будущее, ресивер получающий уведомление о перезагрузке устройства, в нем можно стартовать BtListener -->
         <receiver
-            android:name="com.shivandev.btmonoforaudio.model.OnRebootEvents"
+            android:name=".model.OnRebootEvents"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
