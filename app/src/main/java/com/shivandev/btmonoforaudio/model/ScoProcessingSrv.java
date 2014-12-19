@@ -30,6 +30,7 @@ public class ScoProcessingSrv extends RoboService {
     @Inject private Controller mController;
     private ScoStateUpdatedBCastRec mScoStateUpdatedBCastRec;
     private BroadcastReceiver phoneCallListenerRec = null;
+    // todo проверить работу системы при прерывании вещания звонком
 //    private boolean restartAfterCall;
 
 //    private int oldMediaVolume = -1;
@@ -57,7 +58,6 @@ public class ScoProcessingSrv extends RoboService {
     @Override
     public void onDestroy() {
         PauseAndroidMusicService();
-//        togglePlayAndPauseAndroidMusicService();
         stopSCO();
         if (phoneCallListenerRec != null) {
             unregisterReceiver(phoneCallListenerRec);
@@ -67,7 +67,6 @@ public class ScoProcessingSrv extends RoboService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        isScoOn = mAudioManager.isBluetoothScoOn();
 		startSco();
 		super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
@@ -94,12 +93,6 @@ public class ScoProcessingSrv extends RoboService {
         mController.notifyAboutScoStateChanged();
         log("STOP BluetoothSco");
 //        stopForeground(true);
-        /*
-        this.mNM.cancel(1001);
-        localMBTApplication.status = 1;
-        localMBTApplication.notifyChangeListener();
-        localMBTApplication.showToast(getApplicationContext(), l(2131230732));
-        */
     }
 
     public static boolean isScoOn() {
@@ -161,22 +154,13 @@ public class ScoProcessingSrv extends RoboService {
                         registerReceiver(phoneCallListenerRec, new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
                     }
 //                    startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.SCO_SERVICE_RUN));
-                    // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
-                    mController.notifyAboutScoStateChanged();
-
-//                    unregisterReceiver(this);
-                    /*
-                    showStatusMessage(0);
-                    localMBTApplication.notifyChangeListener();
-                    localMBTApplication.showToast(getApplicationContext(), l(2131230734));
-                    */
+                    mController.notifyAboutScoStateChanged(); // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
                     //                playStartSound();
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            playAndroidMusicService();
 //                            if (!restartAfterCall) {
-//                                togglePlayAndPauseAndroidMusicService();
+                            playAndroidMusicService();
 //                            }
 //                            restartAfterCall = false;
                         }
@@ -196,7 +180,6 @@ public class ScoProcessingSrv extends RoboService {
 
     private void playAndroidMusicService() {
         if (Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool()) {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 long eventTime = SystemClock.uptimeMillis() - 1;
                 KeyEvent downEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY, 0);
@@ -211,13 +194,11 @@ public class ScoProcessingSrv extends RoboService {
                 player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY));
                 sendOrderedBroadcast(player, null);
             }
-//            getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
             log("play music");
         }
     }
     private void PauseAndroidMusicService() {
         if (Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool()) {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 long eventTime = SystemClock.uptimeMillis() - 1;
                 KeyEvent downEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PAUSE, 0);
@@ -232,7 +213,6 @@ public class ScoProcessingSrv extends RoboService {
                 player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PAUSE));
                 sendOrderedBroadcast(player, null);
             }
-//            getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
             log("pause music");
         }
     }

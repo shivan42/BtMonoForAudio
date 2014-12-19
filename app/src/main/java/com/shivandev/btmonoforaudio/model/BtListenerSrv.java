@@ -25,7 +25,7 @@ public class BtListenerSrv extends RoboService {
         IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
         registerReceiver(mBtListenerBCastRec, filter);
         isBtListenerRun = true;
-        mController.notifyAboutBtListenerStateChanged();
+        mController.notifyAboutBtListenerStateChanged(); // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
 //        startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
     }
 
