@@ -29,6 +29,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     @InjectView(R.id.am_btn_stopBtAdapterListener) private Button stopServiceBtn;
     @InjectView(R.id.am_chb_controlMusicPlayer) private CheckBox controlMusicPlayerOptionChB;
     @InjectView(R.id.am_chb_startBtServiceAfterReboot) private CheckBox startBtServiceAfterRebootOptionChB;
+    @InjectView(R.id.am_chb_notifyBtServiceIfBtAdapterIsOn) private CheckBox notifyBtServiceIfBtAdapterIsOnOptionChB;
 
     @Inject private Controller controller;
     @Inject private AudioManager mAudioManager;
@@ -44,6 +45,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         stopServiceBtn.setOnClickListener(this);
         controlMusicPlayerOptionChB.setOnCheckedChangeListener(this);
         startBtServiceAfterRebootOptionChB.setOnCheckedChangeListener(this);
+        notifyBtServiceIfBtAdapterIsOnOptionChB.setOnCheckedChangeListener(this);
 
         findViewById(R.id.command).setOnClickListener(this);
         refreshInterfaceDependedOnPrefs();
@@ -52,6 +54,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     private void refreshInterfaceDependedOnPrefs() {
         controlMusicPlayerOptionChB.setChecked(Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool());
         startBtServiceAfterRebootOptionChB.setChecked(Prefs.IS_BT_SERVICE_START_AFTER_REBOOT.getBool());
+        notifyBtServiceIfBtAdapterIsOnOptionChB.setChecked(Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool());
     }
 
     @Override

@@ -55,19 +55,18 @@ public class Controller {
     public void notifyAboutScoStateChanged() {
         if (ScoProcessingSrv.isScoOn()) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
-        } else btListenerStateNotify();
+        } else btListenerStateNotify(true);
         notifier.scoStateChanged();
     }
 
     public void notifyAboutBtListenerStateChanged() {
         if (!ScoProcessingSrv.isScoOn()) {
-            btListenerStateNotify();
+            btListenerStateNotify(true);
         }
-
     }
 
-    private void btListenerStateNotify() {
-        if (BtListenerSrv.isBtListenerRun()) {
+    public void btListenerStateNotify(boolean isBtAdapterOn) {
+        if (BtListenerSrv.isBtListenerRun() && isBtAdapterOn) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.BT_LISTENER_SERVICE_RUN));
         } else {
             mNotificationManager.cancel(NotifyFactory.ID_NOTIFY);

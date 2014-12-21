@@ -41,7 +41,7 @@
         </service>
 
         <receiver
-        android:name=".model.BtListenerBCastRec"
+        android:name=".model.BtHeadsetStateListenerBCastRec"
         android:enabled="true"
         android:exported="true" >
         </receiver>
