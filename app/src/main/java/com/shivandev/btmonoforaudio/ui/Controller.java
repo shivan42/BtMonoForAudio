@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.Prefs;
-import com.shivandev.btmonoforaudio.model.BtListenerBCastRec;
+import com.shivandev.btmonoforaudio.model.BtHeadsetStateListenerBCastRec;
 import com.shivandev.btmonoforaudio.model.BtListenerSrv;
 import com.shivandev.btmonoforaudio.model.ScoProcessingSrv;
 import com.shivandev.btmonoforaudio.utils.ServiceUtils;
@@ -18,7 +18,7 @@ public class Controller {
     private static ScoStateObserve notifier = new ScoStateObserve();
 
     @Inject private Context context;
-    @Inject private BtListenerBCastRec mBtListenerBCastRec;
+    @Inject private BtHeadsetStateListenerBCastRec mBtHeadsetStateListenerBCastRec;
     @Inject private ScoProcessingSrv mScoProcessingSrv;
     @Inject private ServiceUtils mServiceUtils;
     @Inject NotificationManager mNotificationManager;
@@ -80,6 +80,10 @@ public class Controller {
 
     public void setStartServiceAfterRebootOption(boolean isNeeded) {
         Prefs.IS_BT_SERVICE_START_AFTER_REBOOT.set(isNeeded);
+    }
+
+    public void setNotifyAboutBtServiceIfBtAdapterIsOnOption(boolean isNeeded) {
+        Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
     }
 
     static class ScoStateObserve extends Observable {

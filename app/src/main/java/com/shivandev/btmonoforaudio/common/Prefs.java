@@ -4,7 +4,8 @@ import com.shivandev.btmonoforaudio.utils.SharedPrefHelper;
 
 public enum Prefs {
 	IS_MUSIC_PLAYER_CONTROL_NEEDED(SharedPrefHelper.Types.BOOL),
-	IS_BT_SERVICE_START_AFTER_REBOOT(SharedPrefHelper.Types.BOOL);
+	IS_BT_SERVICE_START_AFTER_REBOOT(SharedPrefHelper.Types.BOOL),
+	IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON(SharedPrefHelper.Types.BOOL);
 
 	private final SharedPrefHelper.Types type;
 

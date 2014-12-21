@@ -150,6 +150,9 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
             case R.id.am_chb_startBtServiceAfterReboot:
                 controller.setStartServiceAfterRebootOption(isChecked);
                 break;
+            case R.id.am_chb_notifyBtServiceIfBtAdapterIsOn:
+                controller.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked);
+                break;
         }
         refreshInterfaceDependedOnPrefs();
     }

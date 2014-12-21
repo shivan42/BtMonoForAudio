@@ -67,4 +67,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Оповещать только если БТ адаптер включен"
+        android:id="@+id/am_chb_notifyBtServiceIfBtAdapterIsOn"
+        android:layout_below="@+id/am_chb_startBtServiceAfterReboot"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
