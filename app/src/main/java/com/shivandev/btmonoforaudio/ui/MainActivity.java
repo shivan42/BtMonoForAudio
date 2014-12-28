@@ -1,7 +1,6 @@
 package com.shivandev.btmonoforaudio.ui;
 
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -32,7 +31,6 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     @InjectView(R.id.am_chb_notifyBtServiceIfBtAdapterIsOn) private CheckBox notifyBtServiceIfBtAdapterIsOnOptionChB;
 
     @Inject private Controller controller;
-    @Inject private AudioManager mAudioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +76,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     }
 
     private void refreshInterfaceScoButtons() {
-        boolean isScoServiceRun = mAudioManager.isBluetoothScoOn();
+        boolean isScoServiceRun = controller.isScoProcessingRunning();
         onBtn.setEnabled(!isScoServiceRun);
         offBtn.setEnabled(isScoServiceRun);
     }

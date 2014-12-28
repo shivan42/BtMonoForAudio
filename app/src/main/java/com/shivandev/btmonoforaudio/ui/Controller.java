@@ -49,24 +49,28 @@ public class Controller {
     }
 
     public boolean isBtListenerRunning(){
-        return mServiceUtils.isServiceRunning(BtListenerSrv.class.getName());
+        return BtListenerSrv.isBtListenerRun(); //mServiceUtils.isServiceRunning(BtListenerSrv.class.getName());
+    }
+
+    public static boolean isScoProcessingRunning() {
+        return ScoProcessingSrv.isScoOn();  // mAudioManager.isBluetoothScoOn();
     }
 
     public void notifyAboutScoStateChanged() {
-        if (ScoProcessingSrv.isScoOn()) {
+        if (isScoProcessingRunning()) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
         } else btListenerStateNotify(true);
         notifier.scoStateChanged();
     }
 
     public void notifyAboutBtListenerStateChanged() {
-        if (!ScoProcessingSrv.isScoOn()) {
+        if (!isScoProcessingRunning()) {
             btListenerStateNotify(true);
         }
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {
-        if (BtListenerSrv.isBtListenerRun() && isBtAdapterOn) {
+        if (isBtListenerRunning() && isBtAdapterOn) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.BT_LISTENER_SERVICE_RUN));
         } else {
             mNotificationManager.cancel(NotifyFactory.ID_NOTIFY);
