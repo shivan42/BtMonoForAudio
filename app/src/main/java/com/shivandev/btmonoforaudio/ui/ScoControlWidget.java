@@ -10,16 +10,18 @@ import android.widget.RemoteViews;
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.R;
 
-import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 
 import roboguice.receiver.RoboAppWidgetProvider;
 
 /**
  * Implementation of App Widget functionality.
  */
-public class ScoControlWidget extends RoboAppWidgetProvider {
+public class ScoControlWidget extends RoboAppWidgetProvider implements Observer{
     private static final String UPDATE_ALL_SCO_WIDGETS = "update_all_sco_widgets";
     @Inject private Controller controller;
+	@Inject private Context context;
 
     public static Intent createUpdateIntent() {
         return new Intent(UPDATE_ALL_SCO_WIDGETS);
@@ -47,17 +49,16 @@ public class ScoControlWidget extends RoboAppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        HashSet<String> a = new HashSet<String>();
     }
 
     @Override
     public void onEnabled(Context context) {
-        super.onEnabled(context);
+		controller.startScoListener(this);
     }
 
     @Override
     public void onDisabled(Context context) {
-        super.onDisabled(context);
+		controller.stopScoListener(this);
     }
 
     @Override
@@ -83,6 +84,14 @@ public class ScoControlWidget extends RoboAppWidgetProvider {
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
+
+	@Override
+	public void update(Observable observable, Object data) {
+		ComponentName thisAppWidget = new ComponentName(context.getPackageName(), getClass().getName());
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		int ids[] = appWidgetManager.getAppWidgetIds(thisAppWidget);
+		onHandleUpdate(context, appWidgetManager, ids);
+	}
 }
 
 

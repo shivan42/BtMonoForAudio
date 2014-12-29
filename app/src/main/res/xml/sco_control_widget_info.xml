@@ -3,7 +3,6 @@
                     android:minWidth="40dp"
                     android:minHeight="40dp"
                     android:updatePeriodMillis="0"
-                    android:previewImage="@drawable/example_appwidget_preview"
                     android:initialLayout="@layout/sco_control_widget"
                     android:widgetCategory="home_screen"
                     android:initialKeyguardLayout="@layout/sco_control_widget">
