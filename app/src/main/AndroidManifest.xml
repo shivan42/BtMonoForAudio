@@ -45,7 +45,7 @@
             android:exported="true" >
         </receiver>
 
-        <!-- на будущее, ресивер получающий уведомление о перезагрузке устройства, в нем можно стартовать BtListener -->
+        <!-- ресивер получающий уведомление о перезагрузке устройства, в нем стартует BtListener -->
         <receiver
             android:name=".model.OnRebootEvents"
             android:enabled="true"

@@ -32,6 +32,14 @@ public class Controller {
         context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
+    public static void switchSco(Context context) {
+        if (isScoProcessingRunning()) {
+            ScoProcessingSrv.stopService(context);
+        } else {
+            ScoProcessingSrv.startService(context);
+        }
+    }
+
 	public void startSco() {
 		ScoProcessingSrv.startService(context);
 	}
@@ -40,11 +48,11 @@ public class Controller {
 		ScoProcessingSrv.stopService(context);
     }
 
-    public void startScoListener(Observer observer) {
+    public static void startScoListener(Observer observer) {
         notifier.addObserver(observer);
     }
 
-    public void stopScoListener(Observer observer) {
+    public static void stopScoListener(Observer observer) {
         notifier.deleteObserver(observer);
     }
 

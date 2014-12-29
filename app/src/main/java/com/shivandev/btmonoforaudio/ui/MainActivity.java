@@ -60,13 +60,13 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         super.onResume();
         refreshInterfaceBtAdapterButtons();
         refreshInterfaceScoButtons();
-        controller.startScoListener(this);
+        Controller.startScoListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        controller.stopScoListener(this);
+        Controller.stopScoListener(this);
     }
 
     private void refreshInterfaceBtAdapterButtons() {
@@ -76,7 +76,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     }
 
     private void refreshInterfaceScoButtons() {
-        boolean isScoServiceRun = controller.isScoProcessingRunning();
+        boolean isScoServiceRun = Controller.isScoProcessingRunning();
         onBtn.setEnabled(!isScoServiceRun);
         offBtn.setEnabled(isScoServiceRun);
     }
@@ -107,10 +107,11 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
-                controller.startSco();
-                break;
+//                controller.startSco();
+//                break;
             case R.id.am_btn_stopSco:
-                controller.stopSco();
+                Controller.switchSco(getApplicationContext());
+//                controller.stopSco();
                 break;
             case R.id.am_btn_startBtAdapterListener:
                 controller.startBtAdapterListener();
