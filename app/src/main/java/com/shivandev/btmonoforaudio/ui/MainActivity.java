@@ -1,7 +1,6 @@
 package com.shivandev.btmonoforaudio.ui;
 
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -32,7 +31,6 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     @InjectView(R.id.am_chb_notifyBtServiceIfBtAdapterIsOn) private CheckBox notifyBtServiceIfBtAdapterIsOnOptionChB;
 
     @Inject private Controller controller;
-    @Inject private AudioManager mAudioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +60,13 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         super.onResume();
         refreshInterfaceBtAdapterButtons();
         refreshInterfaceScoButtons();
-        controller.startScoListener(this);
+        Controller.startScoListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        controller.stopScoListener(this);
+        Controller.stopScoListener(this);
     }
 
     private void refreshInterfaceBtAdapterButtons() {
@@ -78,7 +76,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     }
 
     private void refreshInterfaceScoButtons() {
-        boolean isScoServiceRun = mAudioManager.isBluetoothScoOn();
+        boolean isScoServiceRun = Controller.isScoProcessingRunning();
         onBtn.setEnabled(!isScoServiceRun);
         offBtn.setEnabled(isScoServiceRun);
     }
@@ -109,10 +107,11 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
-                controller.startSco();
-                break;
+//                controller.startSco();
+//                break;
             case R.id.am_btn_stopSco:
-                controller.stopSco();
+                Controller.switchSco(getApplicationContext());
+//                controller.stopSco();
                 break;
             case R.id.am_btn_startBtAdapterListener:
                 controller.startBtAdapterListener();

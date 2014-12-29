@@ -32,6 +32,14 @@ public class Controller {
         context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
     }
 
+    public static void switchSco(Context context) {
+        if (isScoProcessingRunning()) {
+            ScoProcessingSrv.stopService(context);
+        } else {
+            ScoProcessingSrv.startService(context);
+        }
+    }
+
 	public void startSco() {
 		ScoProcessingSrv.startService(context);
 	}
@@ -40,33 +48,37 @@ public class Controller {
 		ScoProcessingSrv.stopService(context);
     }
 
-    public void startScoListener(Observer observer) {
+    public static void startScoListener(Observer observer) {
         notifier.addObserver(observer);
     }
 
-    public void stopScoListener(Observer observer) {
+    public static void stopScoListener(Observer observer) {
         notifier.deleteObserver(observer);
     }
 
     public boolean isBtListenerRunning(){
-        return mServiceUtils.isServiceRunning(BtListenerSrv.class.getName());
+        return BtListenerSrv.isBtListenerRun(); //mServiceUtils.isServiceRunning(BtListenerSrv.class.getName());
+    }
+
+    public static boolean isScoProcessingRunning() {
+        return ScoProcessingSrv.isScoOn();  // mAudioManager.isBluetoothScoOn();
     }
 
     public void notifyAboutScoStateChanged() {
-        if (ScoProcessingSrv.isScoOn()) {
+        if (isScoProcessingRunning()) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
         } else btListenerStateNotify(true);
         notifier.scoStateChanged();
     }
 
     public void notifyAboutBtListenerStateChanged() {
-        if (!ScoProcessingSrv.isScoOn()) {
+        if (!isScoProcessingRunning()) {
             btListenerStateNotify(true);
         }
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {
-        if (BtListenerSrv.isBtListenerRun() && isBtAdapterOn) {
+        if (isBtListenerRunning() && isBtAdapterOn) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.BT_LISTENER_SERVICE_RUN));
         } else {
             mNotificationManager.cancel(NotifyFactory.ID_NOTIFY);

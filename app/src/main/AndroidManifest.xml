@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".common.App"
@@ -33,27 +33,35 @@
             android:exported="false"
             android:label="ScoProcessingSrv" >
         </service>
-
         <service
-        android:name=".model.BtListenerSrv"
-        android:enabled="true"
-        android:exported="true" >
+            android:name=".model.BtListenerSrv"
+            android:enabled="true"
+            android:exported="true" >
         </service>
 
         <receiver
-        android:name=".model.BtHeadsetStateListenerBCastRec"
-        android:enabled="true"
-        android:exported="true" >
+            android:name=".model.BtHeadsetStateListenerBCastRec"
+            android:enabled="true"
+            android:exported="true" >
         </receiver>
 
-        <!--на будущее, ресивер получающий уведомление о перезагрузке устройства, в нем можно стартовать BtListener -->
+        <!-- ресивер получающий уведомление о перезагрузке устройства, в нем стартует BtListener -->
         <receiver
             android:name=".model.OnRebootEvents"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+        </receiver>
+        <receiver android:name=".ui.ScoControlWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/sco_control_widget_info" />
         </receiver>
     </application>
 
