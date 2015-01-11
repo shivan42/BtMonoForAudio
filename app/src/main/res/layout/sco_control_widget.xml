@@ -5,7 +5,7 @@
                 >
 
 <ImageButton
-    android:id="@+id/scw_btn_switchSco"
+    android:id="@+id/widgets_btn_switchSco"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:src="@drawable/bluetooth_off"

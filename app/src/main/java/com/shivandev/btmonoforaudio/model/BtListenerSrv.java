@@ -2,6 +2,7 @@ package com.shivandev.btmonoforaudio.model;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
@@ -18,6 +19,19 @@ public class BtListenerSrv extends RoboService {
     @Inject private BtHeadsetStateListenerBCastRec mBtHeadsetStateListenerBCastRec;
     @Inject private BtStateListenerBCastRec mBtStateListenerBCastRec;
     @Inject Controller mController;
+
+
+    private static Intent getServiceIntent(Context context) {
+        return new Intent(context, BtListenerSrv.class);
+    }
+
+    public static void startService(Context context) {
+        context.startService(getServiceIntent(context));
+    }
+
+    public static void stopService(Context context) {
+        context.stopService(getServiceIntent(context));
+    }
 
     @Override
     public void onCreate() {
