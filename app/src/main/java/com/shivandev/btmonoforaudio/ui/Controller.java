@@ -2,20 +2,22 @@ package com.shivandev.btmonoforaudio.ui;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.Prefs;
 import com.shivandev.btmonoforaudio.model.BtHeadsetStateListenerBCastRec;
 import com.shivandev.btmonoforaudio.model.BtListenerSrv;
 import com.shivandev.btmonoforaudio.model.ScoProcessingSrv;
+import com.shivandev.btmonoforaudio.model.ScoStateObserve;
 import com.shivandev.btmonoforaudio.utils.ServiceUtils;
 
-import java.util.Observable;
 import java.util.Observer;
 
+import static com.shivandev.btmonoforaudio.model.ScoStateObserve.ScoState.BT_LISTENER;
+import static com.shivandev.btmonoforaudio.model.ScoStateObserve.ScoState.SCO;
+
 public class Controller {
-    private static ScoStateObserve notifier = new ScoStateObserve();
+    private static ScoStateObserve observeNotifier = new ScoStateObserve();
 
     @Inject private Context context;
     @Inject private BtHeadsetStateListenerBCastRec mBtHeadsetStateListenerBCastRec;
@@ -25,13 +27,20 @@ public class Controller {
     @Inject NotifyFactory mNotifyFactory;
 
     public void stopBtAdapterListener() {
-        context.stopService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
+        BtListenerSrv.stopService(context);
     }
 
     public void startBtAdapterListener() {
-        context.startService(new Intent(context.getApplicationContext(), BtListenerSrv.class));
+        BtListenerSrv.startService(context);
     }
 
+    public static void switchBtListener(Context context) {
+        if (isBtListenerRunning()) {
+            BtListenerSrv.stopService(context);
+        } else {
+            BtListenerSrv.startService(context);
+        }
+    }
     public static void switchSco(Context context) {
         if (isScoProcessingRunning()) {
             ScoProcessingSrv.stopService(context);
@@ -49,14 +58,14 @@ public class Controller {
     }
 
     public static void startScoListener(Observer observer) {
-        notifier.addObserver(observer);
+        observeNotifier.addObserver(observer);
     }
 
     public static void stopScoListener(Observer observer) {
-        notifier.deleteObserver(observer);
+        observeNotifier.deleteObserver(observer);
     }
 
-    public boolean isBtListenerRunning(){
+    public static boolean isBtListenerRunning(){
         return BtListenerSrv.isBtListenerRun(); //mServiceUtils.isServiceRunning(BtListenerSrv.class.getName());
     }
 
@@ -68,13 +77,14 @@ public class Controller {
         if (isScoProcessingRunning()) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
         } else btListenerStateNotify(true);
-        notifier.scoStateChanged();
+        observeNotifier.scoStateChanged(SCO);
     }
 
     public void notifyAboutBtListenerStateChanged() {
         if (!isScoProcessingRunning()) {
             btListenerStateNotify(true);
         }
+        observeNotifier.scoStateChanged(BT_LISTENER);
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {
@@ -97,10 +107,4 @@ public class Controller {
         Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
     }
 
-    static class ScoStateObserve extends Observable {
-        public void scoStateChanged() {
-            setChanged();
-            notifyObservers();
-        }
-    }
 }

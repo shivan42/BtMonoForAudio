@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 //apply plugin: 'android-test'
 apply plugin: 'robolectric'
 
@@ -21,6 +22,9 @@ android {
     }
     productFlavors {
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
@@ -37,4 +41,17 @@ dependencies {
     //    androidTestCompile 'com.squareup:fest-android:1.0.+'
     androidTestCompile 'org.mockito:mockito-core:1.+'
     compile 'com.android.support:support-v4:21.0.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+buildscript {
+    ext.kotlin_version = '0.10.195'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
 }

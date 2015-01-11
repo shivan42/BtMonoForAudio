@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.R;
 import com.shivandev.btmonoforaudio.common.Prefs;
+import com.shivandev.btmonoforaudio.model.ScoStateObserve;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -70,7 +71,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     }
 
     private void refreshInterfaceBtAdapterButtons() {
-        boolean isBtAdapterListenerServiceRun = controller.isBtListenerRunning();
+        boolean isBtAdapterListenerServiceRun = Controller.isBtListenerRunning();
         startServiceBtn.setEnabled(!isBtAdapterListenerServiceRun);
         stopServiceBtn.setEnabled(isBtAdapterListenerServiceRun);
     }
@@ -114,12 +115,13 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
 //                controller.stopSco();
                 break;
             case R.id.am_btn_startBtAdapterListener:
-                controller.startBtAdapterListener();
-                refreshInterfaceBtAdapterButtons();
-                break;
+//                controller.startBtAdapterListener();
+//                refreshInterfaceBtAdapterButtons();
+//                break;
             case R.id.am_btn_stopBtAdapterListener:
-                controller.stopBtAdapterListener();
-                refreshInterfaceBtAdapterButtons();
+                Controller.switchBtListener(getApplicationContext());
+//                controller.stopBtAdapterListener();
+//                refreshInterfaceBtAdapterButtons();
                 break;
             case R.id.command:
                 new Handler().postDelayed(new Runnable() {
@@ -140,7 +142,16 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
 
     @Override
     public void update(Observable observable, Object data) {
-        refreshInterfaceScoButtons();
+        if (data != null && data instanceof ScoStateObserve.ScoState) {
+            switch ((ScoStateObserve.ScoState) data) {
+                case SCO:
+                    refreshInterfaceScoButtons();
+                    break;
+                case BT_LISTENER:
+                    refreshInterfaceBtAdapterButtons();
+                    break;
+            }
+        }
     }
 
     @Override

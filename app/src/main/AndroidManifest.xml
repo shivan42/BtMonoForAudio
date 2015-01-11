@@ -54,7 +54,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".ui.ScoControlWidget" >
+
+        <!--следующие два ресивера по факту виджеты-->
+        <receiver android:name=".ui.ScoControlWidget" android:label="@string/widget1_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -62,6 +64,15 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/sco_control_widget_info" />
+        </receiver>
+        <receiver android:name=".ui.ScoControlAndBtListenerWidget" android:label="@string/widget2_name" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/sco_control_and_bt_listener_widget_info" />
         </receiver>
     </application>
 
