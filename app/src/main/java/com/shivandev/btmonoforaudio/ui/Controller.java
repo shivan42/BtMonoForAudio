@@ -78,6 +78,7 @@ public class Controller {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
         } else btListenerStateNotify(true);
         observeNotifier.scoStateChanged(SCO);
+		if (Prefs.IS_SCO_WIDGET_ENABLED.getBool()) // TODO отправить броадкаст в sco виджет для запуска обновления
     }
 
     public void notifyAboutBtListenerStateChanged() {
@@ -85,6 +86,7 @@ public class Controller {
             btListenerStateNotify(true);
         }
         observeNotifier.scoStateChanged(BT_LISTENER);
+		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) // TODO отправить броадкаст в sco виджет для запуска обновления
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {

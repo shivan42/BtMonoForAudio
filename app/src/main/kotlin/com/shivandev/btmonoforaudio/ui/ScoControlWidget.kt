@@ -9,6 +9,7 @@ import android.widget.RemoteViews
 
 import com.shivandev.btmonoforaudio.R
 import com.shivandev.btmonoforaudio.common.App
+import com.shivandev.btmonoforaudio.common.Prefs
 
 import java.util.Observable
 import java.util.Observer
@@ -35,11 +36,11 @@ open public class ScoControlWidget : RoboAppWidgetProvider(), Observer {
     }
 
     override fun onEnabled(context: Context) {
-        Controller.startScoListener(this)
+        Prefs.IS_SCO_WIDGET_ENABLED.set(true)
     }
 
     override fun onDisabled(context: Context) {
-        Controller.stopScoListener(this)
+        Prefs.IS_SCO_WIDGET_ENABLED.set(false)
     }
 
     open fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, views: RemoteViews) {

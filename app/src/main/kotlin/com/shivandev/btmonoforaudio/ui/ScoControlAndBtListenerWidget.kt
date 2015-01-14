@@ -2,18 +2,14 @@ package com.shivandev.btmonoforaudio.ui
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 
 import com.shivandev.btmonoforaudio.R
-import com.shivandev.btmonoforaudio.common.App
 
 import java.util.Observable
-import java.util.Observer
-
-import roboguice.receiver.RoboAppWidgetProvider
+import com.shivandev.btmonoforaudio.common.Prefs
 
 /**
  * Implementation of App Widget functionality.
@@ -30,11 +26,13 @@ public class ScoControlAndBtListenerWidget : ScoControlWidget() {
     }
 
     override fun onEnabled(context: Context) {
-        Controller.startScoListener(this)
+        Prefs.IS_BT_LISTENER_WIDGET_ENABLED.set(true)
+        //        Controller.startScoListener(this)
     }
 
     override fun onDisabled(context: Context) {
-        Controller.stopScoListener(this)
+//        Controller.stopScoListener(this)
+        Prefs.IS_BT_LISTENER_WIDGET_ENABLED.set(false)
     }
 
     override fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, views: RemoteViews) {

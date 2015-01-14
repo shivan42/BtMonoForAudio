@@ -4,11 +4,14 @@ import com.shivandev.btmonoforaudio.utils.SharedPrefHelper;
 
 import java.util.HashSet;
 
+import static com.shivandev.btmonoforaudio.utils.SharedPrefHelper.Types.*;
+
 public enum Prefs {
-	IS_MUSIC_PLAYER_CONTROL_NEEDED(SharedPrefHelper.Types.BOOL),
-	IS_BT_SERVICE_START_AFTER_REBOOT(SharedPrefHelper.Types.BOOL),
-	IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON(SharedPrefHelper.Types.BOOL),
-	SCO_WIDGET_IDS(SharedPrefHelper.Types.STR_SET);
+	IS_MUSIC_PLAYER_CONTROL_NEEDED(BOOL),
+	IS_BT_SERVICE_START_AFTER_REBOOT(BOOL),
+	IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON(BOOL),
+	IS_SCO_WIDGET_ENABLED(BOOL),
+	IS_BT_LISTENER_WIDGET_ENABLED(BOOL);
 
 	private final SharedPrefHelper.Types type;
 
