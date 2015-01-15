@@ -108,20 +108,12 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.am_btn_startSco:
-//                controller.startSco();
-//                break;
             case R.id.am_btn_stopSco:
                 Controller.switchSco(getApplicationContext());
-//                controller.stopSco();
                 break;
             case R.id.am_btn_startBtAdapterListener:
-//                controller.startBtAdapterListener();
-//                refreshInterfaceBtAdapterButtons();
-//                break;
             case R.id.am_btn_stopBtAdapterListener:
                 Controller.switchBtListener(getApplicationContext());
-//                controller.stopBtAdapterListener();
-//                refreshInterfaceBtAdapterButtons();
                 break;
             case R.id.command:
                 new Handler().postDelayed(new Runnable() {
