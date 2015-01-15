@@ -41,15 +41,10 @@ public class BtListenerSrv extends RoboService {
         registerReceiver(mBtHeadsetStateListenerBCastRec, filter);
         isBtListenerRun = true;
         if (Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool()) {
-            if (isBluetoothAvailable()) {
-                mController.notifyAboutBtListenerStateChanged(); // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
-            }
             filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
             registerReceiver(mBtStateListenerBCastRec, filter);
-        } else {
-            mController.notifyAboutBtListenerStateChanged();
         }
-
+        mController.notifyAboutBtListenerStateChanged(); // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
 //        startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
 
     }
@@ -73,11 +68,6 @@ public class BtListenerSrv extends RoboService {
 
     public static boolean isBtListenerRun() {
         return isBtListenerRun;
-    }
-
-    private boolean isBluetoothAvailable() {
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        return (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled());
     }
 
     @Override

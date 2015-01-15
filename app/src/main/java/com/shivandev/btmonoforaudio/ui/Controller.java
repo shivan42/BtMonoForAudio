@@ -1,6 +1,7 @@
 package com.shivandev.btmonoforaudio.ui;
 
 import android.app.NotificationManager;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 
@@ -86,11 +87,15 @@ public class Controller {
 	}
 
     public void notifyAboutBtListenerStateChanged() {
-        if (!isScoProcessingRunning()) {
+        if (isNeedToNotifyAboutBtListener()) {
             btListenerStateNotify(true);
         }
         observeNotifier.scoStateChanged(BT_LISTENER);
 		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
+    }
+
+    private boolean isNeedToNotifyAboutBtListener() {
+        return Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool() && isBluetoothAvailable() && !isScoProcessingRunning();
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {
@@ -113,4 +118,8 @@ public class Controller {
         Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
     }
 
+    private boolean isBluetoothAvailable() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled());
+    }
 }
