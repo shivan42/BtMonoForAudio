@@ -14,7 +14,7 @@ import com.shivandev.btmonoforaudio.common.Prefs
 /**
  * Implementation of App Widget functionality.
  */
-public class ScoControlAndBtListenerWidget : ScoControlWidget() {
+class ScoControlAndBtListenerWidget : ScoControlWidget() {
     protected val ACTION_SWITCH_BT_LISTENER_FROM_WIDGET: String = context.getPackageName() + "switch_bt_listener_from_widget"
 
     override fun onHandleUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -49,15 +49,20 @@ public class ScoControlAndBtListenerWidget : ScoControlWidget() {
         super.updateAppWidget(context, appWidgetManager, appWidgetId, views)
     }
 
-    override fun update(observable: Observable, data: Any?) {
-        updateWidgetByObservableObject(thisAppWidget)
-    }
+//    override fun update(observable: Observable, data: Any?) {
+//        updateWidgetByObservableObject(thisAppWidget)
+//    }
 
     override fun onReceive(context: Context, intent: Intent) {
         super<ScoControlWidget>.onReceive(context, intent)
         // обрабатываем нажатие кнопки контроля Сервиса наблюдей за БТ адаптером
-        if (intent.getAction().equalsIgnoreCase(ACTION_SWITCH_BT_LISTENER_FROM_WIDGET)) {
-            Controller.switchBtListener(context)
+//        if (intent.getAction().equalsIgnoreCase(ACTION_SWITCH_BT_LISTENER_FROM_WIDGET)) {
+//            Controller.switchBtListener(context)
+//        }
+        val act = intent.getAction()
+        when {
+            act.equalsIgnoreCase(ACTION_SWITCH_BT_LISTENER_FROM_WIDGET) -> Controller.switchBtListener(context)
+            act.equalsIgnoreCase(Controller.ACTION_BT_LISTENER_WIDGET_UPDATE) -> updateWidgetByObservableObject(thisAppWidget)
         }
     }
 }

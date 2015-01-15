@@ -2,6 +2,7 @@ package com.shivandev.btmonoforaudio.ui;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.Prefs;
@@ -18,6 +19,8 @@ import static com.shivandev.btmonoforaudio.model.ScoStateObserve.ScoState.SCO;
 
 public class Controller {
     private static ScoStateObserve observeNotifier = new ScoStateObserve();
+	public static String ACTION_SCO_WIDGET_UPDATE = "com.shivandev.btmonoforaudio.action_sco_widget_update";
+	public static String ACTION_BT_LISTENER_WIDGET_UPDATE = "com.shivandev.btmonoforaudio.action_bt_listener_widget_update";
 
     @Inject private Context context;
     @Inject private BtHeadsetStateListenerBCastRec mBtHeadsetStateListenerBCastRec;
@@ -78,15 +81,16 @@ public class Controller {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
         } else btListenerStateNotify(true);
         observeNotifier.scoStateChanged(SCO);
-		if (Prefs.IS_SCO_WIDGET_ENABLED.getBool()) // TODO отправить броадкаст в sco виджет для запуска обновления
-    }
+		if (Prefs.IS_SCO_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_SCO_WIDGET_UPDATE));
+		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
+	}
 
     public void notifyAboutBtListenerStateChanged() {
         if (!isScoProcessingRunning()) {
             btListenerStateNotify(true);
         }
         observeNotifier.scoStateChanged(BT_LISTENER);
-		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) // TODO отправить броадкаст в sco виджет для запуска обновления
+		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {

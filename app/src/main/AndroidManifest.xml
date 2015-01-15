@@ -59,6 +59,7 @@
         <receiver android:name=".ui.ScoControlWidget" android:label="@string/widget1_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.shivandev.btmonoforaudio.action_sco_widget_update" />
             </intent-filter>
 
             <meta-data
@@ -68,6 +69,7 @@
         <receiver android:name=".ui.ScoControlAndBtListenerWidget" android:label="@string/widget2_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.shivandev.btmonoforaudio.action_bt_listener_widget_update" />
             </intent-filter>
 
             <meta-data

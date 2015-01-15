@@ -21,9 +21,11 @@ import com.shivandev.btmonoforaudio.model.ScoStateObserve.ScoState
 /**
  * Implementation of App Widget functionality.
  */
-open public class ScoControlWidget : RoboAppWidgetProvider(), Observer {
+
+open class ScoControlWidget : RoboAppWidgetProvider() {
     protected val context: Context = App.getContext()
     protected val ACTION_SWITCH_SCO_FROM_WIDGET: String = context.getPackageName() + "switch_sco_from_widget"
+//    open val ACTION_SCO_WIDGET_UPDATE: String = "com.shivandev.btmonoforaudio.action_sco_widget_update"
 
     inline protected val thisAppWidget: ComponentName = ComponentName(context.getPackageName(), javaClass.getName())
 
@@ -59,11 +61,11 @@ open public class ScoControlWidget : RoboAppWidgetProvider(), Observer {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    override fun update(observable: Observable, data: Any?) {
-        if (data is ScoStateObserve.ScoState && data == ScoState.SCO) {
-            updateWidgetByObservableObject(thisAppWidget)
-        }
-    }
+//    override fun update(observable: Observable, data: Any?) {
+//        if (data is ScoStateObserve.ScoState && data == ScoState.SCO) {
+//            updateWidgetByObservableObject(thisAppWidget)
+//        }
+//    }
 
     fun updateWidgetByObservableObject(thisAppWidget: ComponentName) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -74,8 +76,10 @@ open public class ScoControlWidget : RoboAppWidgetProvider(), Observer {
     override fun onReceive(context: Context, intent: Intent) {
         super<RoboAppWidgetProvider>.onReceive(context, intent)
         // обрабатываем нажатие кнопки контроля SCO вещания
-        if (intent.getAction().equalsIgnoreCase(ACTION_SWITCH_SCO_FROM_WIDGET)) {
-            Controller.switchSco(context)
+        val act = intent.getAction()
+        when {
+            act.equalsIgnoreCase(ACTION_SWITCH_SCO_FROM_WIDGET) -> Controller.switchSco(context)
+            act.equalsIgnoreCase(Controller.ACTION_SCO_WIDGET_UPDATE) -> updateWidgetByObservableObject(thisAppWidget)
         }
     }
 
