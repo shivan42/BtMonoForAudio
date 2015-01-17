@@ -95,6 +95,7 @@ public class Controller {
     }
 
     private boolean isNeedToNotifyAboutBtListener() {
+        // TODO исправить условие для реализации опцииОповещения о работе сервиса только при включенном блютусе
         return Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool() && isBluetoothAvailable() && !isScoProcessingRunning();
     }
 
@@ -121,5 +122,9 @@ public class Controller {
     private boolean isBluetoothAvailable() {
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled());
+    }
+
+    public void menuCall() {
+        context.startActivity(new Intent(context, SettingsActivity.class));
     }
 }

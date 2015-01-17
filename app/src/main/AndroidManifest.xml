@@ -55,8 +55,10 @@
             </intent-filter>
         </receiver>
 
-        <!--следующие два ресивера по факту виджеты-->
-        <receiver android:name=".ui.ScoControlWidget" android:label="@string/widget1_name" >
+        <!-- следующие два ресивера по факту виджеты -->
+        <receiver
+            android:name=".ui.ScoControlWidget"
+            android:label="@string/widget1_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.shivandev.btmonoforaudio.action_sco_widget_update" />
@@ -66,7 +68,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/sco_control_widget_info" />
         </receiver>
-        <receiver android:name=".ui.ScoControlAndBtListenerWidget" android:label="@string/widget2_name" >
+        <receiver
+            android:name=".ui.ScoControlAndBtListenerWidget"
+            android:label="@string/widget2_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.shivandev.btmonoforaudio.action_bt_listener_widget_update" />
@@ -76,6 +80,15 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/sco_control_and_bt_listener_widget_info" />
         </receiver>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.shivandev.btmonoforaudio.ui.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

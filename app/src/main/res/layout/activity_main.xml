@@ -58,22 +58,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <CheckBox
+    <ImageButton
+        android:id="@+id/am_btn_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Запускать сервис после перезагрузки"
-        android:id="@+id/am_chb_startBtServiceAfterReboot"
-        android:layout_below="@+id/am_chb_controlMusicPlayer"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Оповещать только если БТ адаптер включен"
-        android:id="@+id/am_chb_notifyBtServiceIfBtAdapterIsOn"
-        android:layout_below="@+id/am_chb_startBtServiceAfterReboot"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:src="@android:drawable/ic_dialog_dialer"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
 
 </RelativeLayout>

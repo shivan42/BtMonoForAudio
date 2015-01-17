@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.shivandev.btmonoforaudio.ui.SettingsActivity">
+    <item
+        android:id="@+id/ms_action_help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:showAsAction="always"
+        android:title="Помощь"
+        />
+</menu>

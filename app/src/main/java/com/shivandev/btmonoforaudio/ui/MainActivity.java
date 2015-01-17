@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.R;
@@ -27,9 +28,8 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
     @InjectView(R.id.am_btn_stopSco) private Button offBtn;
     @InjectView(R.id.am_btn_startBtAdapterListener) private Button startServiceBtn;
     @InjectView(R.id.am_btn_stopBtAdapterListener) private Button stopServiceBtn;
+    @InjectView(R.id.am_btn_menu) private ImageButton settingsActivityBtn;
     @InjectView(R.id.am_chb_controlMusicPlayer) private CheckBox controlMusicPlayerOptionChB;
-    @InjectView(R.id.am_chb_startBtServiceAfterReboot) private CheckBox startBtServiceAfterRebootOptionChB;
-    @InjectView(R.id.am_chb_notifyBtServiceIfBtAdapterIsOn) private CheckBox notifyBtServiceIfBtAdapterIsOnOptionChB;
 
     @Inject private Controller controller;
 
@@ -42,9 +42,8 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         offBtn.setOnClickListener(this);
         startServiceBtn.setOnClickListener(this);
         stopServiceBtn.setOnClickListener(this);
+        settingsActivityBtn.setOnClickListener(this);
         controlMusicPlayerOptionChB.setOnCheckedChangeListener(this);
-        startBtServiceAfterRebootOptionChB.setOnCheckedChangeListener(this);
-        notifyBtServiceIfBtAdapterIsOnOptionChB.setOnCheckedChangeListener(this);
 
         findViewById(R.id.command).setOnClickListener(this);
         refreshInterfaceDependedOnPrefs();
@@ -52,8 +51,6 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
 
     private void refreshInterfaceDependedOnPrefs() {
         controlMusicPlayerOptionChB.setChecked(Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool());
-        startBtServiceAfterRebootOptionChB.setChecked(Prefs.IS_BT_SERVICE_START_AFTER_REBOOT.getBool());
-        notifyBtServiceIfBtAdapterIsOnOptionChB.setChecked(Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool());
     }
 
     @Override
@@ -115,6 +112,9 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
             case R.id.am_btn_stopBtAdapterListener:
                 Controller.switchBtListener(getApplicationContext());
                 break;
+            case R.id.am_btn_menu:
+                controller.menuCall();
+                break;
             case R.id.command:
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -128,7 +128,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
 //                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
                     }
                 }, 1000);
-                break;
+            break;
         }
     }
 
@@ -152,13 +152,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
             case R.id.am_chb_controlMusicPlayer:
                 controller.setControlMusicPlayerOption(isChecked);
                 break;
-            case R.id.am_chb_startBtServiceAfterReboot:
-                controller.setStartServiceAfterRebootOption(isChecked);
-                break;
-            case R.id.am_chb_notifyBtServiceIfBtAdapterIsOn:
-                controller.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked);
-                break;
         }
-        refreshInterfaceDependedOnPrefs();
+//        refreshInterfaceDependedOnPrefs();
     }
 }
