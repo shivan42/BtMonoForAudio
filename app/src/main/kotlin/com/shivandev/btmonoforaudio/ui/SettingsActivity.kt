@@ -46,8 +46,9 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         when (buttonView.getId()) {
-            R.id.as_chb_startBtServiceAfterReboot -> controller?.setStartServiceAfterRebootOption(isChecked)
-            R.id.as_chb_notifyBtServiceIfBtAdapterIsOn -> controller?.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked)
+            R.id.as_chb_startBtServiceAfterReboot -> controller.setStartServiceAfterRebootOption(isChecked)
+            R.id.as_chb_notifyBtServiceIfBtAdapterIsOn -> controller.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked)
+            R.id.as_chb_checkBtAdapterIsOn -> controller.setCheckBtAdapterIsOnOption(isChecked)
             else -> {}
         }
     }

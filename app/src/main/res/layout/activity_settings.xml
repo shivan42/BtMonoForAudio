@@ -24,5 +24,12 @@
         android:id="@+id/as_chb_notifyBtServiceIfBtAdapterIsOn"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         />
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Проверять включен ли блютус"
+        android:id="@+id/as_chb_checkBtAdapterIsOn"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        />
 
 </LinearLayout>

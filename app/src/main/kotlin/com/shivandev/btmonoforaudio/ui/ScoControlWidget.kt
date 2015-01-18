@@ -74,11 +74,12 @@ open class ScoControlWidget : RoboAppWidgetProvider() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
+        val controller = Controller()
         super<RoboAppWidgetProvider>.onReceive(context, intent)
         // обрабатываем нажатие кнопки контроля SCO вещания
         val act = intent.getAction()
         when {
-            act.equalsIgnoreCase(ACTION_SWITCH_SCO_FROM_WIDGET) -> Controller.switchSco(context)
+            act.equalsIgnoreCase(ACTION_SWITCH_SCO_FROM_WIDGET) -> controller.switchSco(context)
             act.equalsIgnoreCase(Controller.ACTION_SCO_WIDGET_UPDATE) -> updateWidgetByObservableObject(thisAppWidget)
         }
     }

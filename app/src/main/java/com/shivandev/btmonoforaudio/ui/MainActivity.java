@@ -106,7 +106,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.am_btn_startSco:
             case R.id.am_btn_stopSco:
-                Controller.switchSco(getApplicationContext());
+                controller.switchSco(getApplicationContext());
                 break;
             case R.id.am_btn_startBtAdapterListener:
             case R.id.am_btn_stopBtAdapterListener:

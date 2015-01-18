@@ -47,11 +47,15 @@ public class Controller {
             BtListenerSrv.startService(context);
         }
     }
-    public static void switchSco(Context context) {
+    public void switchSco(Context context) {
         if (isScoProcessingRunning()) {
             ScoProcessingSrv.stopService(context);
         } else {
-            ScoProcessingSrv.startService(context);
+            if (Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.getBool()) {
+                requestEnableBt();
+            } else {
+                ScoProcessingSrv.startService(context);
+            }
         }
     }
 
@@ -130,6 +134,10 @@ public class Controller {
         }
     }
 
+    public void setCheckBtAdapterIsOnOption(boolean isNeeded) {
+        Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.set(isNeeded);
+    }
+
     private boolean isBluetoothAvailable() {
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled());
@@ -137,5 +145,13 @@ public class Controller {
 
     public void menuCall() {
         context.startActivity(new Intent(context, SettingsActivity.class));
+    }
+
+    private void requestEnableBt() {
+        if (isBluetoothAvailable()) {
+            int REQUEST_ENABLE_BT = 123;
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            context.startActivity(enableBtIntent);
+        }
     }
 }
