@@ -50,7 +50,6 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
             R.id.as_chb_notifyBtServiceIfBtAdapterIsOn -> controller?.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked)
             else -> {}
         }
-//        refreshInterfaceDependedOnPrefs()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

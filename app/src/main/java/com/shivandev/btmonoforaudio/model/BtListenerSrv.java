@@ -19,6 +19,7 @@ public class BtListenerSrv extends RoboService {
     @Inject private BtHeadsetStateListenerBCastRec mBtHeadsetStateListenerBCastRec;
     @Inject private BtStateListenerBCastRec mBtStateListenerBCastRec;
     @Inject Controller mController;
+    private boolean isBtListenerAlreadyRun = false;
 
 
     private static Intent getServiceIntent(Context context) {
@@ -36,14 +37,9 @@ public class BtListenerSrv extends RoboService {
     @Override
     public void onCreate() {
         super.onCreate();
-        IntentFilter filter;
-        filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
+        IntentFilter filter = new IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
         registerReceiver(mBtHeadsetStateListenerBCastRec, filter);
         isBtListenerRun = true;
-        if (Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool()) {
-            filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(mBtStateListenerBCastRec, filter);
-        }
         mController.notifyAboutBtListenerStateChanged(); // оповещаем контроллер об изменении состояния сервиса (включен/выключен)
 //        startForeground(ServiceUtils.ID_NOTIFY, mServiceUtils.getNotification(ServiceUtils.NotificationType.BT_LISTENER_SERVICE_RUN));
 
@@ -51,6 +47,14 @@ public class BtListenerSrv extends RoboService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool()) {
+            IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(mBtStateListenerBCastRec, filter);
+        } else {
+            if (isBtListenerAlreadyRun) unregisterReceiver(mBtStateListenerBCastRec);
+        }
+        isBtListenerAlreadyRun = true;
+        mController.sendNotificationAboutBtListener();
         return super.onStartCommand(intent, flags, startId); //Service.START_STICKY;
     }
 
@@ -62,6 +66,7 @@ public class BtListenerSrv extends RoboService {
         }
         isBtListenerRun = false;
         mController.notifyAboutBtListenerStateChanged();
+        mController.sendNotificationAboutBtListener();
 //        stopForeground(true);
         super.onDestroy();
     }

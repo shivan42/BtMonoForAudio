@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.inject.Inject;
+import com.shivandev.btmonoforaudio.common.App;
 import com.shivandev.btmonoforaudio.common.Prefs;
 import com.shivandev.btmonoforaudio.model.BtHeadsetStateListenerBCastRec;
 import com.shivandev.btmonoforaudio.model.BtListenerSrv;
@@ -88,20 +89,22 @@ public class Controller {
 	}
 
     public void notifyAboutBtListenerStateChanged() {
-        if (isNeedToNotifyAboutBtListener()) {
-            btListenerStateNotify(true);
-        }
         observeNotifier.scoStateChanged(BT_LISTENER);
-		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
-//        if (restartBtListener != null) {
-//            Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(restartBtListener);
-//            switchBtListener(App.getContext());
-//            restartBtListener = null;
-//        }
+        if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
+    }
+
+    public void sendNotificationAboutBtListener() {
+        if (!isScoProcessingRunning()) {
+            if (isNeedToNotifyAboutBtListener()) {
+                btListenerStateNotify(true);
+            } else {
+                btListenerStateNotify(false);
+            }
+        }
     }
 
     private boolean isNeedToNotifyAboutBtListener() {
-        return (isBluetoothAvailable() || !Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool()) && !isScoProcessingRunning();
+        return (isBluetoothAvailable() || !Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool());
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {
@@ -121,12 +124,10 @@ public class Controller {
     }
 
     public void setNotifyAboutBtServiceIfBtAdapterIsOnOption(boolean isNeeded) {
-        // todo надумать как реализовать нотифай при смее опции толи через перезапуск сервиса толи попробовать в сервисе вынести регистрацию ресивера отдельно
-//        if (isBtListenerRunning() && !isBluetoothAvailable() && restartBtListener == null) {
-//            restartBtListener = isNeeded;
-//            switchBtListener(App.getContext());
-//        } else
-            Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
+        Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
+        if (isBtListenerRunning() && !isBluetoothAvailable() && restartBtListener == null) {
+            BtListenerSrv.startService(App.getContext());
+        }
     }
 
     private boolean isBluetoothAvailable() {
