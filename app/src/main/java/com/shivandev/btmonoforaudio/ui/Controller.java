@@ -29,6 +29,7 @@ public class Controller {
     @Inject private ServiceUtils mServiceUtils;
     @Inject NotificationManager mNotificationManager;
     @Inject NotifyFactory mNotifyFactory;
+    private Boolean restartBtListener = null;
 
     public void stopBtAdapterListener() {
         BtListenerSrv.stopService(context);
@@ -92,11 +93,15 @@ public class Controller {
         }
         observeNotifier.scoStateChanged(BT_LISTENER);
 		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
+//        if (restartBtListener != null) {
+//            Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(restartBtListener);
+//            switchBtListener(App.getContext());
+//            restartBtListener = null;
+//        }
     }
 
     private boolean isNeedToNotifyAboutBtListener() {
-        // TODO исправить условие для реализации опцииОповещения о работе сервиса только при включенном блютусе
-        return Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool() && isBluetoothAvailable() && !isScoProcessingRunning();
+        return (isBluetoothAvailable() || !Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool()) && !isScoProcessingRunning();
     }
 
     public void btListenerStateNotify(boolean isBtAdapterOn) {
@@ -116,7 +121,12 @@ public class Controller {
     }
 
     public void setNotifyAboutBtServiceIfBtAdapterIsOnOption(boolean isNeeded) {
-        Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
+        // todo надумать как реализовать нотифай при смее опции толи через перезапуск сервиса толи попробовать в сервисе вынести регистрацию ресивера отдельно
+//        if (isBtListenerRunning() && !isBluetoothAvailable() && restartBtListener == null) {
+//            restartBtListener = isNeeded;
+//            switchBtListener(App.getContext());
+//        } else
+            Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
     }
 
     private boolean isBluetoothAvailable() {

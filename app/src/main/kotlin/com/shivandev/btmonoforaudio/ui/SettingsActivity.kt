@@ -23,9 +23,13 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
 
     val controller = Controller()
 
+//    var controller: Controller? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super<Activity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+//        controller = Controller()
 
         startBtServiceAfterRebootOptionChB = findViewById(R.id.as_chb_startBtServiceAfterReboot) as CheckBox
         startBtServiceAfterRebootOptionChB!!.setOnCheckedChangeListener(this)
@@ -42,8 +46,9 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         when (buttonView.getId()) {
-            R.id.as_chb_startBtServiceAfterReboot -> controller.setStartServiceAfterRebootOption(isChecked)
-            R.id.as_chb_notifyBtServiceIfBtAdapterIsOn -> controller.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked)
+            R.id.as_chb_startBtServiceAfterReboot -> controller?.setStartServiceAfterRebootOption(isChecked)
+            R.id.as_chb_notifyBtServiceIfBtAdapterIsOn -> controller?.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked)
+            else -> {}
         }
 //        refreshInterfaceDependedOnPrefs()
     }
