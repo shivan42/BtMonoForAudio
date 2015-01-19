@@ -11,12 +11,8 @@ import com.shivandev.btmonoforaudio.R
 import com.shivandev.btmonoforaudio.common.App
 import com.shivandev.btmonoforaudio.common.Prefs
 
-import java.util.Observable
-import java.util.Observer
-
 import roboguice.receiver.RoboAppWidgetProvider
-import com.shivandev.btmonoforaudio.model.ScoStateObserve
-import com.shivandev.btmonoforaudio.model.ScoStateObserve.ScoState
+import android.bluetooth.BluetoothAdapter
 
 /**
  * Implementation of App Widget functionality.
@@ -83,5 +79,4 @@ open class ScoControlWidget : RoboAppWidgetProvider() {
             act.equalsIgnoreCase(Controller.ACTION_SCO_WIDGET_UPDATE) -> updateWidgetByObservableObject(thisAppWidget)
         }
     }
-
 }

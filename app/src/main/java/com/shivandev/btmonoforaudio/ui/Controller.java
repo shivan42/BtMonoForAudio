@@ -51,8 +51,8 @@ public class Controller {
         if (isScoProcessingRunning()) {
             ScoProcessingSrv.stopService(context);
         } else {
-            if (Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.getBool()) {
-                requestEnableBt();
+            if (Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.getBool() && !isBluetoothAvailable()) {
+				requestEnableBt(context);
             } else {
                 ScoProcessingSrv.startService(context);
             }
@@ -147,11 +147,9 @@ public class Controller {
         context.startActivity(new Intent(context, SettingsActivity.class));
     }
 
-    private void requestEnableBt() {
-        if (isBluetoothAvailable()) {
-            int REQUEST_ENABLE_BT = 123;
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            context.startActivity(enableBtIntent);
-        }
-    }
+	private void requestEnableBt(Context context) {
+		Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+		enableBtIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(enableBtIntent);
+	}
 }

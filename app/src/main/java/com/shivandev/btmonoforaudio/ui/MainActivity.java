@@ -24,6 +24,8 @@ import roboguice.inject.InjectView;
 
 public class MainActivity extends RoboActivity implements View.OnClickListener, Observer, CompoundButton.OnCheckedChangeListener {
 
+	private static final int REQUEST_ENABLE_BT = 2015011901;
+
     @InjectView(R.id.am_btn_startSco) private Button onBtn;
     @InjectView(R.id.am_btn_stopSco) private Button offBtn;
     @InjectView(R.id.am_btn_startBtAdapterListener) private Button startServiceBtn;
@@ -106,7 +108,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.am_btn_startSco:
             case R.id.am_btn_stopSco:
-                controller.switchSco(getApplicationContext());
+                controller.switchSco(this);
                 break;
             case R.id.am_btn_startBtAdapterListener:
             case R.id.am_btn_stopBtAdapterListener:
@@ -117,17 +119,17 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
                 break;
             case R.id.command:
                 new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent player = new Intent(Intent.ACTION_MEDIA_BUTTON);
-                        player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
-                        sendOrderedBroadcast(player, null);
-                        player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
-                        sendOrderedBroadcast(player, null);
+					@Override
+					public void run() {
+						Intent player = new Intent(Intent.ACTION_MEDIA_BUTTON);
+						player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+						sendOrderedBroadcast(player, null);
+						player.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+						sendOrderedBroadcast(player, null);
 //                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.play"));
 //                        getApplicationContext().sendBroadcast(new Intent("com.android.music.musicservicecommand.togglepause"));
-                    }
-                }, 1000);
+					}
+				}, 1000);
             break;
         }
     }
@@ -155,4 +157,25 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         }
 //        refreshInterfaceDependedOnPrefs();
     }
+
+//	public void requestEnableBt() {
+//		Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//		startActivity(enableBtIntent);
+////		startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//	}
+
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		super.onActivityResult(requestCode, resultCode, data);
+//		if (resultCode == RESULT_OK) {
+//			if (requestCode == REQUEST_ENABLE_BT) {
+//				try {
+//					Thread.sleep(2000L);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				controller.switchSco(this);
+//			}
+//		}
+//	}
 }

@@ -6,20 +6,21 @@ import android.view.Menu
 import android.view.MenuItem
 
 import com.shivandev.btmonoforaudio.R
-import roboguice.inject.InjectView
 import android.widget.CheckBox
 import com.shivandev.btmonoforaudio.common.Prefs
 import android.widget.CompoundButton
+import roboguice.activity.RoboActivity
 import com.google.inject.Inject
 
 
 public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListener {
-    //    Inject private val controller: Controller? = null
+//        Inject private var controller: Controller? = null
 //        InjectView(R.id.as_chb_startBtServiceAfterReboot) private var startBtServiceAfterRebootOptionChB: CheckBox? = null
     //    InjectView(R.id.as_chb_notifyBtServiceIfBtAdapterIsOn) private val notifyBtServiceIfBtAdapterIsOnOptionChB: CheckBox? = null
 
     var startBtServiceAfterRebootOptionChB: CheckBox? = null
     var notifyBtServiceIfBtAdapterIsOnOptionChB: CheckBox? = null
+    var checkBtAdapterIsOnChB: CheckBox? = null
 
     val controller = Controller()
 
@@ -35,6 +36,8 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
         startBtServiceAfterRebootOptionChB!!.setOnCheckedChangeListener(this)
         notifyBtServiceIfBtAdapterIsOnOptionChB = findViewById(R.id.as_chb_notifyBtServiceIfBtAdapterIsOn) as CheckBox
         notifyBtServiceIfBtAdapterIsOnOptionChB!!.setOnCheckedChangeListener(this)
+        checkBtAdapterIsOnChB = findViewById(R.id.as_chb_checkBtAdapterIsOn) as CheckBox
+        checkBtAdapterIsOnChB!!.setOnCheckedChangeListener(this)
 
         refreshInterfaceDependedOnPrefs()
     }
@@ -42,6 +45,7 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
     private fun refreshInterfaceDependedOnPrefs() {
         startBtServiceAfterRebootOptionChB!!.setChecked(Prefs.IS_BT_SERVICE_START_AFTER_REBOOT.getBool())
         notifyBtServiceIfBtAdapterIsOnOptionChB!!.setChecked(Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool())
+        checkBtAdapterIsOnChB!!.setChecked(Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.getBool())
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
