@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.common.App;
@@ -51,13 +52,21 @@ public class Controller {
         if (isScoProcessingRunning()) {
             ScoProcessingSrv.stopService(context);
         } else {
-            if (Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.getBool() && !isBluetoothAvailable()) {
-				requestEnableBt(context);
-            } else {
+            if (!isBluetoothAvailable()) {
+				if (Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.getBool()) {
+					requestEnableBt(context);
+				} else {
+					msg("Bluetooth-адаптер не запущен", context);
+				}
+			} else {
                 ScoProcessingSrv.startService(context);
             }
         }
     }
+
+	public void msg(String textMsg, Context ctx) {
+		Toast.makeText(ctx, textMsg, Toast.LENGTH_SHORT).show();
+	}
 
 	public void startSco() {
 		ScoProcessingSrv.startService(context);

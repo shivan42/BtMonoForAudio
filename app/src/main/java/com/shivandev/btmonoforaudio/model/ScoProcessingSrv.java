@@ -76,7 +76,6 @@ public class ScoProcessingSrv extends RoboService {
 //        oldMediaVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 //        oldBtVolume = mAudioManager.getStreamVolume(6);
         mAudioManager.startBluetoothSco();
-        isScoOn = true;
         registerReceiver(mScoStateUpdatedBCastRec, new IntentFilter(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED));
     }
 
@@ -147,7 +146,8 @@ public class ScoProcessingSrv extends RoboService {
                         mAudioManager.setStreamVolume(6, MBTPreferences.bluetooth_volume, 0);
                     }
                     */
-                    mAudioManager.setMode(AudioManager.MODE_IN_CALL);
+					isScoOn = true;
+					mAudioManager.setMode(AudioManager.MODE_IN_CALL);
                     mAudioManager.setBluetoothScoOn(true);
                     if (phoneCallListenerRec == null) {
                         phoneCallListenerRec = new PhoneStateBCastRec();
@@ -168,9 +168,13 @@ public class ScoProcessingSrv extends RoboService {
                     //                mAudioManager.setStreamVolume(3, mAudioManager.getStreamMaxVolume(3), 0);
                     break;
                 case AudioManager.SCO_AUDIO_STATE_DISCONNECTED:
-                    log("SCO_AUDIO_STATE_DISCONNECTED");
-                    stopSelf();
-                    break;
+//                    log("SCO_AUDIO_STATE_DISCONNECTED");
+					if (isScoOn()) {
+						stopSelf();
+					} else {
+						mController.msg("Ошибка. Проверьте Bluetooth подключение и гарнитуру", context);
+					}
+					break;
                 case AudioManager.SCO_AUDIO_STATE_ERROR:
                     log("SCO_AUDIO_STATE_ERROR");
                     break;
