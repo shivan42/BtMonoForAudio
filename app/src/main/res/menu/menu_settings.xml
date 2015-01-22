@@ -5,6 +5,6 @@
         android:id="@+id/ms_action_help"
         android:icon="@android:drawable/ic_menu_help"
         android:showAsAction="always"
-        android:title="Помощь"
+        android:title="@string/as_ib_help_title"
         />
 </menu>
