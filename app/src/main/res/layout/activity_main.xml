@@ -52,7 +52,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Управлять стандартным плейером"
+        android:text="@string/am_chb_control_audio_player"
         android:id="@+id/am_chb_controlMusicPlayer"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"

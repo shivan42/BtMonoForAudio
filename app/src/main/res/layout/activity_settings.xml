@@ -12,7 +12,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Запускать сервис после перезагрузки"
+        android:text="@string/as_chb_start_after_reboot"
         android:id="@+id/as_chb_startBtServiceAfterReboot"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         />
@@ -20,14 +20,14 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Оповещать только если БТ адаптер включен"
+        android:text="Оповещать о работе автозапуска только если БТ адаптер включен"
         android:id="@+id/as_chb_notifyBtServiceIfBtAdapterIsOn"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         />
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Проверять включен ли блютус"
+        android:text="@string/as_chb_ask_for_bt_run"
         android:id="@+id/as_chb_checkBtAdapterIsOn"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         />
