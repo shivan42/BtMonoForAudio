@@ -27,7 +27,7 @@ public class Controller {
 
     @Inject private Context context;
     @Inject private BtHeadsetStateListenerBCastRec mBtHeadsetStateListenerBCastRec;
-    @Inject private ScoProcessingSrv mScoProcessingSrv;
+//    @Inject private ScoProcessingSrv mScoProcessingSrv;
     @Inject private ServiceUtils mServiceUtils;
     @Inject NotificationManager mNotificationManager;
     @Inject NotifyFactory mNotifyFactory;
