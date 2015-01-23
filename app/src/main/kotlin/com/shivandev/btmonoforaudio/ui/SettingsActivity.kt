@@ -13,7 +13,7 @@ import roboguice.activity.RoboActivity
 import com.google.inject.Inject
 
 
-public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListener {
+public class SettingsActivity : BaseRoboActivity(), CompoundButton.OnCheckedChangeListener {
 //        Inject private var controller: Controller? = null
 //        InjectView(R.id.as_chb_startBtServiceAfterReboot) private var startBtServiceAfterRebootOptionChB: CheckBox? = null
     //    InjectView(R.id.as_chb_notifyBtServiceIfBtAdapterIsOn) private val notifyBtServiceIfBtAdapterIsOnOptionChB: CheckBox? = null
@@ -27,7 +27,7 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
 //    var controller: Controller? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<Activity>.onCreate(savedInstanceState)
+        super<BaseRoboActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
 //        controller = Controller()
@@ -74,6 +74,6 @@ public class SettingsActivity : Activity(), CompoundButton.OnCheckedChangeListen
 //            return true
 //        }
 
-        return super<Activity>.onOptionsItemSelected(item)
+        return super<BaseRoboActivity>.onOptionsItemSelected(item)
     }
 }
