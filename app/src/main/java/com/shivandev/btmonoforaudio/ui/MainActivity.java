@@ -18,11 +18,10 @@ import com.shivandev.btmonoforaudio.model.ScoStateObserve;
 import java.util.Observable;
 import java.util.Observer;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 
-public class MainActivity extends RoboActivity implements View.OnClickListener, Observer, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends BaseRoboActivity implements View.OnClickListener, Observer, CompoundButton.OnCheckedChangeListener {
 
 	private static final int REQUEST_ENABLE_BT = 2015011901;
 
@@ -55,7 +54,7 @@ public class MainActivity extends RoboActivity implements View.OnClickListener, 
         controlMusicPlayerOptionChB.setChecked(Prefs.IS_MUSIC_PLAYER_CONTROL_NEEDED.getBool());
     }
 
-    @Override
+	@Override
     protected void onResume() {
         super.onResume();
         refreshInterfaceBtAdapterButtons();
