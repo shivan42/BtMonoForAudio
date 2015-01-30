@@ -9,6 +9,7 @@ import android.support.v4.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
 import com.shivandev.btmonoforaudio.R;
+import com.shivandev.btmonoforaudio.common.App;
 
 public class NotifyFactory {
 
@@ -20,6 +21,7 @@ public class NotifyFactory {
     }
 
     public Notification getNotification(EventType type) {
+		if (context == null) context = App.getContext();
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         switch (type) {
             case SCO_SERVICE_RUN:

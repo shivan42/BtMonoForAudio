@@ -23,16 +23,11 @@ public class BtStateListenerBCastRec extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
-                BluetoothAdapter.ERROR);
+        final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
         switch (state) {
             case BluetoothAdapter.STATE_OFF:
-                mController.btListenerStateNotify(false);
-                log("BT adapter is off");
-                break;
-            case BluetoothAdapter.STATE_ON:
-                mController.btListenerStateNotify(true);
-                log("BT adapter is on");
+			case BluetoothAdapter.STATE_ON:
+				mController.sendNotificationAboutBtListener();
                 break;
         }
     }

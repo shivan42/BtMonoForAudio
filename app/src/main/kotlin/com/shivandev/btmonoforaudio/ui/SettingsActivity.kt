@@ -1,6 +1,5 @@
 package com.shivandev.btmonoforaudio.ui
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,17 +8,16 @@ import com.shivandev.btmonoforaudio.R
 import android.widget.CheckBox
 import com.shivandev.btmonoforaudio.common.Prefs
 import android.widget.CompoundButton
-import roboguice.activity.RoboActivity
-import com.google.inject.Inject
 
 
 public class SettingsActivity : BaseRoboActivity(), CompoundButton.OnCheckedChangeListener {
-//        Inject private var controller: Controller? = null
-//        InjectView(R.id.as_chb_startBtServiceAfterReboot) private var startBtServiceAfterRebootOptionChB: CheckBox? = null
     //    InjectView(R.id.as_chb_notifyBtServiceIfBtAdapterIsOn) private val notifyBtServiceIfBtAdapterIsOnOptionChB: CheckBox? = null
+    //        InjectView(R.id.as_chb_startBtServiceAfterReboot) private var startBtServiceAfterRebootOptionChB: CheckBox? = null
+    //        Inject private var controller: Controller? = null
 
     var startBtServiceAfterRebootOptionChB: CheckBox? = null
     var notifyBtServiceIfBtAdapterIsOnOptionChB: CheckBox? = null
+    var notifyBtServiceAlwaysOptionChB: CheckBox? = null
     var checkBtAdapterIsOnChB: CheckBox? = null
 
     val controller = Controller()
@@ -30,12 +28,15 @@ public class SettingsActivity : BaseRoboActivity(), CompoundButton.OnCheckedChan
         super<BaseRoboActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        controller.init();
 //        controller = Controller()
 
         startBtServiceAfterRebootOptionChB = findViewById(R.id.as_chb_startBtServiceAfterReboot) as CheckBox
         startBtServiceAfterRebootOptionChB!!.setOnCheckedChangeListener(this)
-        notifyBtServiceIfBtAdapterIsOnOptionChB = findViewById(R.id.as_chb_notifyBtServiceIfBtAdapterIsOn) as CheckBox
+        notifyBtServiceIfBtAdapterIsOnOptionChB = findViewById(R.id.as_chb_notifyAboutBtServiceIfBtAdapterIsOn) as CheckBox
         notifyBtServiceIfBtAdapterIsOnOptionChB!!.setOnCheckedChangeListener(this)
+        notifyBtServiceAlwaysOptionChB = findViewById(R.id.as_chb_notifyAboutBtServiceAlways) as CheckBox
+        notifyBtServiceAlwaysOptionChB!!.setOnCheckedChangeListener(this)
         checkBtAdapterIsOnChB = findViewById(R.id.as_chb_checkBtAdapterIsOn) as CheckBox
         checkBtAdapterIsOnChB!!.setOnCheckedChangeListener(this)
 
@@ -45,13 +46,27 @@ public class SettingsActivity : BaseRoboActivity(), CompoundButton.OnCheckedChan
     private fun refreshInterfaceDependedOnPrefs() {
         startBtServiceAfterRebootOptionChB!!.setChecked(Prefs.IS_BT_SERVICE_START_AFTER_REBOOT.getBool())
         notifyBtServiceIfBtAdapterIsOnOptionChB!!.setChecked(Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool())
+        notifyBtServiceAlwaysOptionChB!!.setChecked(Prefs.IS_NOTIFY_BT_SERVICE_ALWAYS.getBool())
         checkBtAdapterIsOnChB!!.setChecked(Prefs.IS_CHECK_BT_ADAPTER_IS_ON_OPTION.getBool())
+        checkEnabledViews()
+    }
+
+    private fun checkEnabledViews() {
+        notifyBtServiceIfBtAdapterIsOnOptionChB!!.setEnabled(!notifyBtServiceAlwaysOptionChB!!.isChecked())
+        notifyBtServiceAlwaysOptionChB!!.setEnabled(!notifyBtServiceIfBtAdapterIsOnOptionChB!!.isChecked())
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         when (buttonView.getId()) {
             R.id.as_chb_startBtServiceAfterReboot -> controller.setStartServiceAfterRebootOption(isChecked)
-            R.id.as_chb_notifyBtServiceIfBtAdapterIsOn -> controller.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked)
+            R.id.as_chb_notifyAboutBtServiceIfBtAdapterIsOn -> {
+                checkEnabledViews()
+                controller.setNotifyAboutBtServiceIfBtAdapterIsOnOption(isChecked)
+            }
+            R.id.as_chb_notifyAboutBtServiceAlways -> {
+                checkEnabledViews()
+                controller.setNotifyAboutBtServiceAlwaysOption(isChecked)
+            }
             R.id.as_chb_checkBtAdapterIsOn -> controller.setCheckBtAdapterIsOnOption(isChecked)
             else -> {}
         }

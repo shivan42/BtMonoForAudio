@@ -11,5 +11,8 @@
     <string name="as_chb_start_after_reboot">Запускать сервис после перезагрузки</string>
     <string name="am_chb_control_audio_player">Управлять стандартным плейером</string>
     <string name="as_chb_ask_for_bt_run">Предлагать включить Bluetooth</string>
+    <string name="as_tv_notify_about_bt_service_run">Оповещать о работе автозапуска:</string>
+    <string name="as_chb_notify_about_bt_service_run_if_bt_adapter_on">при работе Bluetooth</string>
+    <string name="as_chb_notify_about_bt_service_run_always">всегда</string>
 
 </resources>

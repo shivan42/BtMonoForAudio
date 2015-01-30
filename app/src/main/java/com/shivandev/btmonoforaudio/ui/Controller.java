@@ -95,7 +95,7 @@ public class Controller {
     public void notifyAboutScoStateChanged() {
         if (isScoProcessingRunning()) {
             mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.SCO_SERVICE_RUN));
-        } else btListenerStateNotify(true);
+        } else sendNotificationAboutBtListener();
         observeNotifier.scoStateChanged(SCO);
 		if (Prefs.IS_SCO_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_SCO_WIDGET_UPDATE));
 		if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
@@ -106,26 +106,18 @@ public class Controller {
         if (Prefs.IS_BT_LISTENER_WIDGET_ENABLED.getBool()) context.sendBroadcast(new Intent(ACTION_BT_LISTENER_WIDGET_UPDATE));
     }
 
-    public void sendNotificationAboutBtListener() {
-        if (!isScoProcessingRunning()) {
-            if (isNeedToNotifyAboutBtListener()) {
-                btListenerStateNotify(true);
-            } else {
-                btListenerStateNotify(false);
-            }
-        }
-    }
-
     private boolean isNeedToNotifyAboutBtListener() {
-        return (isBluetoothAvailable() || !Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool());
+        return (Prefs.IS_NOTIFY_BT_SERVICE_ALWAYS.getBool() || (isBluetoothAvailable() && Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.getBool()));
     }
 
-    public void btListenerStateNotify(boolean isBtAdapterOn) {
-        if (isBtListenerRunning() && isBtAdapterOn) {
-            mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.BT_LISTENER_SERVICE_RUN));
-        } else {
-            mNotificationManager.cancel(NotifyFactory.ID_NOTIFY);
-        }
+    public void sendNotificationAboutBtListener() {
+		if (!isScoProcessingRunning()) {
+			if (isNeedToNotifyAboutBtListener() /* isBtListenerRunning() && isBtAdapterOn */) {
+				mNotificationManager.notify(NotifyFactory.ID_NOTIFY, mNotifyFactory.getNotification(NotifyFactory.EventType.BT_LISTENER_SERVICE_RUN));
+			} else {
+				mNotificationManager.cancel(NotifyFactory.ID_NOTIFY);
+			}
+		}
     }
 
     public void setControlMusicPlayerOption(boolean isNeeded) {
@@ -138,9 +130,16 @@ public class Controller {
 
     public void setNotifyAboutBtServiceIfBtAdapterIsOnOption(boolean isNeeded) {
         Prefs.IS_NOTIFY_BT_SERVICE_IF_BT_ADAPTER_IS_ON.set(isNeeded);
-        if (isBtListenerRunning() && !isBluetoothAvailable() && restartBtListener == null) {
+
+        if (isBtListenerRunning() && isBluetoothAvailable()) {
             BtListenerSrv.startService(App.getContext());
         }
+    }
+    public void setNotifyAboutBtServiceAlwaysOption(boolean isNeeded) {
+        Prefs.IS_NOTIFY_BT_SERVICE_ALWAYS.set(isNeeded);
+        if (isBtListenerRunning()) {
+			sendNotificationAboutBtListener();
+		}
     }
 
     public void setCheckBtAdapterIsOnOption(boolean isNeeded) {
@@ -160,5 +159,14 @@ public class Controller {
 		Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 		enableBtIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(enableBtIntent);
+	}
+
+	public void init() {
+		if (mNotificationManager == null) {
+			mNotificationManager = (NotificationManager) App.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+		}
+		if (mNotifyFactory == null) {
+			mNotifyFactory = new NotifyFactory();
+		}
 	}
 }
