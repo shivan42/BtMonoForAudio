@@ -1,16 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 //apply plugin: 'android-test'
-apply plugin: 'robolectric'
+apply plugin: 'org.robolectric'
 
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '21.1.2'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "com.shivandev.btmonoforaudio"
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -29,8 +29,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'org.roboguice:roboguice:3.+'
-    provided 'org.roboguice:roboblender:3.+'
+    compile 'org.roboguice:roboguice:3.0.1'
+    provided 'org.roboguice:roboblender:3.0.1'
     //    TestCompile 'junit:junit:4.11'
     //    TestCompile 'org.robolectric:robolectric:2.4'
     //    TestCompile 'com.squareup:fest-android:1.0.+'
@@ -39,13 +39,15 @@ dependencies {
     androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
     //    androidTestCompile project.files("$project.buildDir/intermediates/exploded-aar/com.squareup.assertj/assertj-android/1.0.0/classes.jar")
     //    androidTestCompile 'com.squareup:fest-android:1.0.+'
-    androidTestCompile 'org.mockito:mockito-core:1.+'
-    compile 'com.android.support:support-v4:21.0.3'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:design:22.2.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.google.android.gms:play-services-base:6.5.87'
 }
 buildscript {
-    ext.kotlin_version = '0.10.195'
+    ext.kotlin_version = '0.12.613'
     repositories {
         mavenCentral()
     }
